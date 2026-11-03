@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#5B4BE8"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Maya"><title>Maya · Entreno</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet"><style id="css">
+:root{--ink:#1E1B3A;--ink2:#5D5A78;--ink3:#75718F;--bg:#F6F5FC;--card:#fff;--line:#E7E5F3;--v:#5B4BE8;--vd:#3E30C4;--vl:#ECE9FF;--y:#FFC845;--coral:#FF7A66;--mint:#2FBF97;--r:22px;--sh:0 1px 2px rgba(30,27,58,.04),0 6px 20px rgba(30,27,58,.06)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{font-family:Nunito,system-ui,sans-serif;color:var(--ink);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,textarea{font:inherit;color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+/* header */
+.hero{padding-top:calc(26px + env(safe-area-inset-top)) !important;}
+.hero{background:radial-gradient(120% 140% at 100% 0%,#7B6CFF 0%,var(--v) 45%,var(--vd) 100%);color:#fff;padding:26px 0 70px;border-radius:0 0 34px 34px}
+.hero-top{display:flex;align-items:center;gap:16px}
+.avatar{width:64px;height:64px;border-radius:50%;background:#fff;display:grid;place-items:center;flex:none;box-shadow:0 0 0 4px rgba(255,255,255,.22)}
+.avatar svg{width:34px;height:34px;fill:var(--v)}
+.hello{font-size:13px;font-weight:700;opacity:.8;letter-spacing:.02em}
+.dogname{font-size:28px;font-weight:900;line-height:1.1;display:flex;align-items:center;gap:8px}
+.edit{opacity:.7;font-size:12px;font-weight:800;background:rgba(255,255,255,.16);padding:4px 10px;border-radius:99px}
+.edit:hover{opacity:1}
+.lvl{margin-left:auto;text-align:right}
+.lvl-pill{display:inline-flex;align-items:center;gap:6px;background:var(--y);color:var(--ink);font-weight:900;font-size:13px;padding:6px 12px;border-radius:99px}
+.xpbar{width:130px;height:6px;border-radius:9px;background:rgba(255,255,255,.22);margin-top:8px;margin-left:auto;overflow:hidden}
+.xpbar i{display:block;height:100%;background:var(--y);border-radius:9px}
+.xptxt{font-size:11px;opacity:.75;margin-top:4px;font-weight:700}
+.stats{display:grid;grid-template-columns:minmax(0,260px);gap:10px;margin-top:22px}
+.stat{background:rgba(255,255,255,.12);border-radius:18px;padding:12px 14px}
+.stat b{font-size:22px;font-weight:900;display:block;line-height:1.1}
+.stat span{font-size:12px;opacity:.8;font-weight:700}
+.namein{background:rgba(255,255,255,.18);border:0;border-radius:12px;padding:4px 10px;color:#fff;font-size:24px;font-weight:900;width:180px;outline:2px solid rgba(255,255,255,.4)}
+/* tabs */
+.tabs{display:flex;gap:6px;background:#fff;border-radius:99px;padding:6px;box-shadow:var(--sh);margin:-28px auto 24px;width:max-content;max-width:100%;position:sticky;top:10px;z-index:5}
+.tab{padding:10px 20px;border-radius:99px;font-weight:800;color:var(--ink2);font-size:14px}
+.tab.on{background:var(--v);color:#fff}
+/* sections */
+h2{font-size:20px;font-weight:900;letter-spacing:-.01em;margin-bottom:4px}
+.sub{color:var(--ink2);font-size:14px;margin-bottom:14px}
+.sec{margin-bottom:30px}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh)}
+.goals{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.goal{background:#fff;border-radius:20px;padding:16px;text-align:left;box-shadow:var(--sh);border:2px solid transparent;transition:transform .15s,border-color .15s;position:relative}
+.goal:hover{transform:translateY(-2px)}
+.goal.on{border-color:var(--c)}
+.goal .ic{width:42px;height:42px;border-radius:14px;background:var(--t);display:grid;place-items:center;margin-bottom:12px}
+.goal .ic svg{width:22px;height:22px;stroke:var(--c);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.goal b{display:block;font-weight:900;font-size:15px;line-height:1.2}
+.goal small{color:var(--ink3);font-weight:700;font-size:12px}
+.goal .chk{position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;background:var(--c);display:none;place-items:center}
+.goal.on .chk{display:grid}
+.chk svg{width:12px;height:12px;stroke:#fff;stroke-width:3;fill:none}
+.mini{height:5px;background:var(--line);border-radius:9px;margin-top:10px;overflow:hidden}
+.mini i{display:block;height:100%;background:var(--c);border-radius:9px}
+.two{display:grid;grid-template-columns:1.6fr 1fr;gap:18px;align-items:start}
+@media(max-width:820px){.two{grid-template-columns:1fr}}
+.plan{display:flex;flex-direction:column;gap:10px}
+.exrow{display:flex;align-items:center;gap:14px;padding:14px;background:#fff;border-radius:20px;box-shadow:var(--sh);text-align:left;width:100%}
+.exrow .tile{width:54px;height:54px;border-radius:16px;background:var(--t);display:grid;place-items:center;flex:none;position:relative}
+.tile svg{width:26px;height:26px;stroke:var(--c);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.tile .num{position:absolute;top:-6px;left:-6px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;font-weight:900;display:grid;place-items:center}
+.exrow .mid{flex:1;min-width:0}
+.exrow b{font-weight:900;font-size:15px;display:block}
+.meta{display:flex;gap:10px;align-items:center;color:var(--ink3);font-size:12px;font-weight:700;margin-top:2px;flex-wrap:wrap}
+.dots{display:inline-flex;gap:3px}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.dots i.f{background:var(--c)}
+.go{background:var(--v);color:#fff;font-weight:900;font-size:13px;padding:10px 16px;border-radius:99px;flex:none}
+.go:hover{background:var(--vd)}
+.go.ghost{background:var(--vl);color:var(--v)}
+.badge{font-size:11px;font-weight:900;padding:3px 8px;border-radius:99px;background:var(--vl);color:var(--v)}
+.badge.done{background:#DDF6EE;color:#13906D}
+.badge.new{background:#F1F0F6;color:var(--ink3)}
+.week{padding:18px}
+.ring{display:flex;align-items:center;gap:16px}
+.ring svg{width:92px;height:92px;flex:none}
+.ring b{font-size:26px;font-weight:900}
+.days{display:flex;justify-content:space-between;margin-top:16px}
+.day{text-align:center;font-size:11px;font-weight:800;color:var(--ink3)}
+.day i{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#F1F0F6;margin:4px auto 0}
+.day.on i{background:var(--mint)}
+.day.on i:after{content:"";width:9px;height:5px;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.day.today{color:var(--ink)}
+.day.today i{box-shadow:0 0 0 2px var(--v)}
+.tipcard{padding:18px;margin-top:14px;background:linear-gradient(135deg,#FFF4D6,#FFE9B8);box-shadow:none}
+.tipcard b{font-weight:900;font-size:13px;display:block;margin-bottom:4px}
+.tipcard p{font-size:13.5px;color:#5c4a14}
+.wk-set{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:12px;color:var(--ink3);font-weight:700}
+.stp{width:32px;height:32px;border-radius:50%;background:#F1F0F6;font-weight:900}
+/* library */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.chip{padding:8px 14px;border-radius:99px;background:#fff;box-shadow:var(--sh);font-weight:800;font-size:13px;color:var(--ink2)}
+.chip.on{background:var(--ink);color:#fff}
+.search{margin-left:auto;background:#fff;border:0;border-radius:99px;padding:9px 16px;box-shadow:var(--sh);min-width:200px;outline:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.excard{background:#fff;border-radius:22px;box-shadow:var(--sh);padding:0;text-align:left;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s}
+.excard:hover{transform:translateY(-2px)}
+.excard .top{background:var(--t);height:96px;display:grid;place-items:center;position:relative}
+.excard .top svg{width:40px;height:40px;stroke:var(--c);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.excard .top .badge{position:absolute;top:10px;right:10px;background:#fff}
+.excard .bd{padding:14px 16px 16px}
+.excard b{font-weight:900;font-size:16px;display:block}
+.excard .cat{font-size:12px;font-weight:800;color:var(--c)}
+/* progress */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:700px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tl{padding:16px}
+.tl b{font-size:28px;font-weight:900;display:block;line-height:1.1}
+.tl span{font-size:12px;color:var(--ink2);font-weight:700}
+.heat{padding:18px;overflow-x:auto}
+.hm{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,14px);gap:4px;width:max-content}
+.hm i{width:14px;height:14px;border-radius:4px;background:#EEEDF5}
+.hm i.l1{background:#C9C2FF}.hm i.l2{background:#9587FF}.hm i.l3{background:var(--v)}
+.hm i.fut{background:transparent}
+.legend{display:flex;gap:4px;align-items:center;font-size:11px;color:var(--ink3);font-weight:700;margin-top:10px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.bars{padding:18px;display:flex;flex-direction:column;gap:14px}
+.bar-row{display:flex;align-items:center;gap:12px}
+.bar-row .tile{width:36px;height:36px;border-radius:12px;background:var(--t);display:grid;place-items:center;flex:none}
+.bar-row .tile svg{width:18px;height:18px}
+.bar-row .lab{flex:1}
+.bar-row .lab div{display:flex;justify-content:space-between;font-weight:800;font-size:13px}
+.bar-row .lab span{color:var(--ink3)}
+.bar{height:8px;border-radius:9px;background:var(--line);margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:9px;background:var(--c)}
+.log{padding:6px 18px}
+.li{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.li:last-child{border:0}
+.li .tile{width:38px;height:38px;border-radius:12px;background:var(--t);display:grid;place-items:center;flex:none}
+.li .tile svg{width:18px;height:18px}
+.li .mid{flex:1;min-width:0}
+.li b{font-weight:800;font-size:14px}
+.li small{display:block;color:var(--ink3);font-size:12px;font-weight:700}
+.li .note{color:var(--ink2);font-size:13px;font-style:italic;margin-top:2px}
+.rate{font-size:12px;font-weight:900;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.r1{background:#FFE6E1;color:#C2412E}.r2{background:var(--vl);color:var(--v)}.r3{background:#DDF6EE;color:#13906D}
+.del{color:var(--ink3);font-size:12px;font-weight:800;padding:4px 8px;border-radius:8px}
+.del:hover,.del.arm{background:#FFE6E1;color:#C2412E}
+.empty{padding:28px;text-align:center;color:var(--ink2)}
+.empty b{display:block;color:var(--ink);font-weight:900;font-size:16px;margin-bottom:4px}
+/* overlay */
+#overlay{position:fixed;inset:0;z-index:50;display:none}
+#overlay.on{display:block}
+.scrim{position:absolute;inset:0;background:rgba(20,17,45,.45);backdrop-filter:blur(3px)}
+.sheet{position:absolute;right:0;top:0;bottom:0;width:min(520px,100%);background:var(--bg);overflow-y:auto;animation:sl .25s ease}
+@keyframes sl{from{transform:translateX(40px);opacity:0}}
+.sh-top{background:var(--t);padding:22px 22px 26px;position:relative}
+.x{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:#fff;font-weight:900;font-size:18px;display:grid;place-items:center;box-shadow:var(--sh)}
+.sh-top .tile{width:58px;height:58px;border-radius:18px;background:#fff;display:grid;place-items:center;margin-bottom:12px}
+.sh-top .tile svg{width:30px;height:30px}
+.sh-top h3{font-size:24px;font-weight:900;line-height:1.15}
+.sh-top .cat{font-weight:800;color:var(--c);font-size:13px}
+.sh-bd{padding:20px 22px 110px}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.fact{background:#fff;border-radius:16px;padding:10px 12px;box-shadow:var(--sh)}
+.fact small{display:block;font-size:11px;color:var(--ink3);font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.fact b{font-weight:900;font-size:14px}
+.h4{font-weight:900;font-size:14px;margin:18px 0 8px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink2)}
+.steps-l{list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:8px}
+.steps-l li{counter-increment:s;background:#fff;border-radius:16px;padding:12px 14px 12px 48px;position:relative;box-shadow:var(--sh);font-size:14.5px}
+.steps-l li:before{content:counter(s);position:absolute;left:12px;top:11px;width:26px;height:26px;border-radius:50%;background:var(--t);color:var(--c);font-weight:900;font-size:13px;display:grid;place-items:center}
+.note-b{border-radius:16px;padding:12px 14px;font-size:14px}
+.note-b b{display:block;font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.n-tip{background:#FFF4D6;color:#5c4a14}.n-bad{background:#FFE6E1;color:#7a2a1d}.n-ok{background:#DDF6EE;color:#0d5c46}
+.sh-cta{position:fixed;bottom:0;right:0;width:min(520px,100%);padding:16px 22px;background:linear-gradient(transparent,var(--bg) 30%)}
+.big{width:100%;background:var(--v);color:#fff;font-weight:900;font-size:16px;padding:16px;border-radius:18px;box-shadow:0 8px 22px rgba(91,75,232,.35)}
+.big:hover{background:var(--vd)}
+/* guide */
+.guide{position:absolute;inset:0;background:var(--bg);overflow-y:auto;animation:fd .2s ease}
+@keyframes fd{from{opacity:0}}
+.g-in{max-width:560px;margin:0 auto;padding:18px 20px 40px;min-height:100%;display:flex;flex-direction:column}
+.g-head{display:flex;align-items:center;gap:12px}
+.g-head .x{position:static}
+.g-head b{font-weight:900;font-size:17px;flex:1}
+.prog{display:flex;gap:5px;margin:16px 0 18px}
+.prog i{flex:1;height:6px;border-radius:9px;background:var(--line)}
+.prog i.on{background:var(--c)}
+.stepcard{background:#fff;border-radius:26px;box-shadow:var(--sh);padding:24px;min-height:170px;position:relative}
+.stepcard .sn{font-size:12px;font-weight:900;color:var(--c);text-transform:uppercase;letter-spacing:.06em}
+.stepcard p{font-size:19px;font-weight:800;line-height:1.4;margin-top:8px}
+.nav{display:flex;gap:10px;margin-top:12px}
+.nav button{flex:1;padding:13px;border-radius:16px;font-weight:900;background:#fff;box-shadow:var(--sh)}
+.nav button.pri{background:var(--ink);color:#fff}
+.nav button:disabled{opacity:.35;cursor:default}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.timer{background:#fff;border-radius:24px;box-shadow:var(--sh);padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.timer svg{width:110px;height:110px}
+.timer .tt{font-size:24px;font-weight:900;fill:var(--ink)}
+.timer button{font-weight:900;font-size:13px;background:var(--t);color:var(--c);padding:8px 16px;border-radius:99px}
+.timer small{font-size:11px;color:var(--ink3);font-weight:700;text-align:center}
+.clk{background:#fff;border-radius:24px;box-shadow:var(--sh);padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.clicker{width:110px;height:110px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFD66B,var(--y) 55%,#F0A800);box-shadow:0 8px 0 #D69200,0 12px 22px rgba(214,146,0,.35);display:grid;place-items:center;font-weight:900;color:#6b4a00;font-size:15px;transition:transform .06s,box-shadow .06s;user-select:none;-webkit-tap-highlight-color:transparent}
+.clicker:active,.clicker.hit{transform:translateY(6px);box-shadow:0 2px 0 #D69200,0 4px 10px rgba(214,146,0,.3)}
+.clk .cnt{font-weight:900;font-size:13px;color:var(--ink2)}
+.clk .cnt b{font-size:18px;color:var(--ink)}
+.clk small{font-size:11px;color:var(--ink3);font-weight:700}
+.g-tip{margin-top:14px}
+.finish{margin-top:auto;padding-top:20px}
+.rategrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.rt{background:#fff;border-radius:20px;padding:18px 8px;box-shadow:var(--sh);border:2px solid transparent;font-weight:900;font-size:14px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.rt .face{width:44px;height:44px;border-radius:50%;display:grid;place-items:center}
+.rt .face svg{width:26px;height:26px;fill:none;stroke-width:2.2;stroke-linecap:round}
+.rt.on{border-color:var(--v)}
+.sum{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.notes{width:100%;border:0;border-radius:16px;padding:14px;min-height:90px;box-shadow:var(--sh);resize:vertical;outline:none;margin-top:8px}
+.celebrate{text-align:center;padding:8px 0 4px}
+.celebrate h3{font-size:26px;font-weight:900}
+.celebrate p{color:var(--ink2)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:99px;font-weight:800;font-size:14px;opacity:0;transition:.25s;z-index:80;pointer-events:none}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.rr{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.rr:last-child{border:0}
+.rr-t{flex:1}.rr-t b{display:block;font-weight:800;font-size:14px}.rr-t small{color:var(--ink3);font-size:12px;font-weight:700}
+.rr.ok .rr-t b:after{content:" ✓";color:var(--mint)}
+.rcnt{display:flex;align-items:center;gap:6px;font-weight:900}.rcnt span{color:var(--ink3);font-size:12px;margin-left:-4px}
+.rck{font-weight:900;font-size:12px;padding:6px 12px;border-radius:99px;background:var(--vl);color:var(--v)}.rr.ok .rck{background:#DDF6EE;color:#13906D}
+.cw{display:flex;gap:10px;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--line)}.cw:last-child{border:0}.cw b{font-weight:900;min-width:118px}.cw span{color:var(--ink2)}
+.vid{display:inline-block;margin-top:10px;background:#fff;color:var(--c);font-weight:900;font-size:13px;padding:8px 14px;border-radius:99px;text-decoration:none;box-shadow:var(--sh)}
+.clicker.voz{font-size:16px;line-height:1.05;text-align:center}
+.mk{display:flex;gap:6px}.nob{background:#FFE6E1;color:#C2412E;font-weight:900;font-size:13px;padding:7px 14px;border-radius:99px}.mkt{background:#F1F0F6;color:var(--ink2);font-weight:800;font-size:11px;padding:7px 10px;border-radius:99px}
+.g80{color:#13906D;font-weight:900}
+.gapb{background:#FFF1CC;color:#9A6A00}
+.n-gap{background:#FFF1CC;color:#6b4a00}
+.pyr{display:flex;flex-direction:column;gap:6px}
+.pr{display:grid;grid-template-columns:62px 64px 1fr;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:10px 12px;box-shadow:var(--sh);text-align:left;border:2px solid transparent;font-size:13px}
+.pr span{font-weight:900;color:var(--ink3);font-size:12px}.pr b{font-weight:900;font-size:12px;color:#13906D}.pr.dif b{color:#C2412E}.pr em{font-style:normal;font-weight:700}
+.pr.dif{margin-left:14px}.pr.on{border-color:var(--c)}
+.lvg{font-size:12px;color:var(--ink2);font-weight:700;margin-top:4px}
+.gcard{display:flex;gap:16px;align-items:center;padding:16px 18px;margin-bottom:16px}
+.gl{width:78px;height:78px;border-radius:22px;background:var(--v);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none}
+.gl span{font-size:10px;font-weight:900;letter-spacing:.1em;opacity:.8}.gl b{font-size:30px;font-weight:900;line-height:1}.gl small{font-size:11px;font-weight:800;opacity:.8}
+.gm{flex:1}.gm>b{font-weight:900;font-size:15px}.gm p{font-size:13px;color:var(--ink2);margin-top:8px}
+.lvs{display:flex;flex-direction:column;gap:6px}
+.lvi{display:flex;gap:10px;align-items:flex-start;background:#fff;border-radius:14px;padding:10px 12px;box-shadow:var(--sh);font-size:13.5px;border:2px solid transparent}
+.lvi>span{width:24px;height:24px;border-radius:50%;background:#F1F0F6;display:grid;place-items:center;font-weight:900;font-size:12px;flex:none}
+.lvi b{display:block;font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink2)}
+.lvi.ok>span{background:var(--mint);color:#fff}.lvi.cur{border-color:var(--c)}.lvi.cur>span{background:var(--t);color:var(--c)}.lvi.lock{opacity:.5}
+.lvgoal{background:var(--t);border-radius:18px;padding:12px 16px;margin-bottom:12px}
+.lvgoal span{display:block;font-size:11px;font-weight:900;color:var(--c);text-transform:uppercase;letter-spacing:.06em}.lvgoal b{font-weight:900;font-size:15px}
+.okt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:#fff;border-radius:18px;padding:14px;box-shadow:var(--sh);margin-top:14px;border:2px solid transparent;font-size:13.5px}
+.okt>span{width:26px;height:26px;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;font-weight:900;color:#fff;flex:none}
+.okt b{display:block;font-weight:900;font-size:14px}.okt.on{border-color:var(--mint)}.okt.on>span{background:var(--mint);border-color:var(--mint)}
+.cta{background:var(--v);color:#fff;border-radius:20px;padding:14px 20px;text-align:left;flex:none;box-shadow:0 8px 22px rgba(91,75,232,.3)}
+.cta b{display:block;font-weight:900;font-size:17px}.cta b:after{content:" ▶";font-size:13px}.cta small{font-size:12px;font-weight:700;opacity:.85}
+.cta:hover{background:var(--vd)}
+.qtag{background:var(--ink);color:#fff;font-weight:900;font-size:12px;padding:4px 10px;border-radius:99px}
+@media(max-width:700px){
+ .gcard{flex-wrap:wrap}.cta{width:100%;text-align:center}
+ .gm p{display:none}.gl{width:60px;height:60px;border-radius:18px}.gl b{font-size:24px}.gcard{padding:14px;gap:12px}
+ .avatar{width:48px;height:48px}.avatar svg{width:26px;height:26px}.dogname{font-size:24px}.stats{margin-top:14px;gap:8px}
+ .sec>.sub{margin-bottom:10px}
+ .tabs{position:fixed;top:auto;bottom:0;left:0;right:0;margin:0;width:100%;max-width:none;border-radius:22px 22px 0 0;justify-content:space-around;padding:8px 10px calc(8px + env(safe-area-inset-bottom));z-index:40;box-shadow:0 -4px 20px rgba(30,27,58,.1)}
+ .tab{flex:1;padding:12px 6px}
+ body{padding-bottom:84px}.hero{padding:20px 0 26px;border-radius:0 0 26px 26px}.wrap{padding:0 16px}
+ .hero-top{flex-wrap:wrap}.lvl{margin-left:0;width:100%;text-align:left;display:flex;align-items:center;gap:10px}.xpbar{margin:0;flex:1}.xptxt{margin:0}
+ .stat{padding:10px}.stat b{font-size:18px}.stat span{font-size:11px}
+ .sec:first-of-type{margin-top:20px}
+ .goals{grid-template-columns:repeat(2,1fr)}
+ #toast{bottom:96px}
+ .exrow{flex-wrap:wrap}.exrow .go{width:100%}
+ .sh-cta{padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+}
+.tyg{margin-bottom:24px}.tyh{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:900;margin-bottom:10px}
+.tyh .tile{width:32px;height:32px;border-radius:10px;background:var(--t);display:grid;place-items:center}.tyh .tile svg{width:17px;height:17px}
+.tyh small{font-size:12px;color:var(--ink3);font-weight:800}
+.chrono{display:flex;align-items:center;gap:14px;background:#fff;border-radius:22px;box-shadow:var(--sh);padding:14px 16px;margin-top:14px;border:2px solid transparent;transition:border-color .2s}
+.chrono.hit{border-color:var(--mint);background:#F2FCF8}
+.ch-l{flex:1;min-width:0}.ch-l span{display:block;font-size:11px;font-weight:900;color:var(--c);text-transform:uppercase;letter-spacing:.05em}
+.ch-l b{display:block;font-size:30px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.15}.chrono.hit .ch-l b{color:#13906D}
+.ch-l small{font-size:12px;color:var(--ink3);font-weight:700}.ch-l .bar{margin:4px 0 6px}.ch-l .bar i{background:var(--c)}.chrono.hit .bar i{background:var(--mint)}
+.ch-b{width:84px;height:84px;border-radius:50%;background:var(--c);color:#fff;font-weight:900;font-size:15px;flex:none;box-shadow:0 6px 16px rgba(0,0,0,.15)}.ch-b.on{background:#C2412E}
+.pr .pc{grid-column:1/-1;font-style:normal;font-size:12px;font-weight:900;display:flex;gap:8px}.pr .pc u{text-decoration:none;color:#13906D}.pr .pc s{text-decoration:none;color:#C2412E}
+.pr.ko{background:#FFF6F4}
+.fails{display:flex;flex-wrap:wrap;gap:6px}.fl{background:#FFE6E1;color:#7a2a1d;border-radius:99px;padding:6px 12px;font-size:13px}.fl b{font-weight:900}
+.bk{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--ink2)}.bkerr{color:#C2412E;font-weight:700}
+.bkb{display:flex;gap:8px;flex-wrap:wrap}
+.track{background:#fff;border-radius:22px;box-shadow:var(--sh);padding:16px 18px;margin-bottom:12px}
+.tk-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}.tk-h b{font-weight:900;font-size:15px}.tk-h span{font-size:12px;font-weight:800;color:var(--ink2)}
+.tk{position:relative;height:14px;border-radius:99px;background:#EEEDF5;margin-top:10px;overflow:hidden}
+.tk i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,#7B6CFF,var(--v));transition:width .4s}
+.tk em{position:absolute;top:0;bottom:0;width:2px;background:#fff}
+.tk-l{display:flex;justify-content:space-around;font-size:11px;font-weight:800;color:var(--ink3);margin-top:6px}
+.lvbtn{font-weight:900;font-size:13px;color:var(--v);background:var(--vl);padding:10px 14px;border-radius:99px;flex:none}
+.lvtabs{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+@media(max-width:700px){.lvbtn{width:100%}}
+.actrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.hero{padding:14px 0 46px !important;padding-top:calc(14px + env(safe-area-inset-top)) !important}
+.hero .avatar{width:46px;height:46px;box-shadow:0 0 0 3px rgba(255,255,255,.22)}.hero .avatar svg{width:24px;height:24px}
+.hero .dogname{font-size:22px}.hero .hello{font-size:11px}
+.hero .stats{margin-top:10px}.hero .stat{padding:8px 12px;display:flex;align-items:baseline;gap:8px}.hero .stat b{font-size:18px;display:inline}
+/* color */
+body{background:radial-gradient(900px 520px at -10% 25%,#FFEDE4 0,transparent 60%),radial-gradient(900px 600px at 110% 55%,#E3F6EF 0,transparent 60%),radial-gradient(800px 500px at 30% 100%,#EEE9FF 0,transparent 60%),var(--bg);background-attachment:fixed}
+.goal{background:linear-gradient(160deg,var(--t) 0%,#fff 75%)}
+.goal .ic{background:#fff;box-shadow:0 2px 8px rgba(30,27,58,.06)}
+.goal.on{background:var(--t)}
+.exrow{background:linear-gradient(90deg,var(--t) 0,#fff 38%);border-left:5px solid var(--c)}
+.exrow .tile{background:#fff}
+.exrow .go{background:var(--c)}.exrow .go:hover{filter:brightness(.92);background:var(--c)}
+.cta{background:linear-gradient(120deg,#7B6CFF 0%,var(--v) 45%,#C2458F 100%)}
+.cta:hover{filter:brightness(.95)}
+.week{background:linear-gradient(160deg,#FFF6E6 0%,#fff 60%)}
+.rr:nth-child(3) .rr-t b{color:#18A97F}.rr:nth-child(4) .rr-t b{color:#A86C00}.rr:nth-child(5) .rr-t b{color:#5B4BE8}.rr:nth-child(6) .rr-t b{color:#D2457F}
+.rr .stp{background:#fff;box-shadow:0 1px 4px rgba(30,27,58,.1)}
+.cw b{display:inline-block;min-width:auto;padding:2px 10px;border-radius:99px;background:#ECE9FF;color:#3E30C4;font-size:12.5px;margin-right:6px;white-space:nowrap}
+.cw:nth-child(8n+2) b{background:#FFE3EF;color:#A8285F}.cw:nth-child(8n+3) b{background:#DDF6EE;color:#0D7A5C}.cw:nth-child(8n+4) b{background:#FFF1CC;color:#8A5B00}
+.cw:nth-child(8n+5) b{background:#DFF0FF;color:#1C6DB0}.cw:nth-child(8n+6) b{background:#FFE6E1;color:#B23A27}.cw:nth-child(8n+7) b{background:#F1E8FF;color:#6A3DC0}.cw:nth-child(8n) b{background:#E9EDF3;color:#4B586B}
+.cw{align-items:center}
+.tile,.goal .ic{transition:transform .15s}.goal:hover .ic{transform:rotate(-6deg) scale(1.05)}
+.track .tk i{background:linear-gradient(90deg,#D2457F,#7B6CFF 50%,#18A97F)}
+.excard{border-left:5px solid var(--c);background:linear-gradient(160deg,var(--t) 0,#fff 55%)}.excard .bd{padding:16px}
+.foot{color:var(--ink3);font-size:12px;text-align:center;padding:10px 0 40px;font-weight:700}
+</style></head><body><div id="root"></div><div id="overlay"></div><div id="toast"></div><script id="state" type="application/json">{}</script><script>if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js")});</script><script id="app">
+(function(){
+var TITLE="Maya · Entreno";
+var FONTS="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap";
+var LS="maya-entreno-v2";
+var ICON={
+s1:'<circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/>',
+s2:'<path d="M7 3h10M7 21h10"/><path d="M8 3c0 4.5 8 4.5 8 9s-8 4.5-8 9"/><path d="M16 3c0 4.5-8 4.5-8 9s8 4.5 8 9"/>',
+s3:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/>',
+s4:'<path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 15h18M3 18v2M21 18v2"/><path d="M6 10V7.5A1.5 1.5 0 0 1 7.5 6h3A1.5 1.5 0 0 1 12 7.5V10"/>',
+extra:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>',
+s56:'<circle cx="18" cy="5" r="2.5"/><path d="M16.5 7C14 9 13 12 11 15s-4 5-7 5"/><path d="M4 20l2-3"/>',
+tricks:'<path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z"/><path d="M19 17l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
+care:'<path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.4a4.2 4.2 0 0 1 7.5 2.4C19.5 15.4 12 20 12 20z"/>'
+};
+var CATS={
+s1:{name:"Vinculación y comunicación",short:"Sesión 1",ses:1,c:"#D2457F",t:"#FFE3EF",desc:"Vínculo, código, juego, llamada y espera"},
+s2:{name:"Permanencia y concentración",short:"Sesión 2",ses:1,c:"#5B4BE8",t:"#ECE9FF",desc:"Permanencia, «Vamos», «¡Eh!»"},
+s3:{name:"Discriminación y frustración",short:"Sesión 3",ses:1,c:"#2C8FE0",t:"#DFF0FF",desc:"Pulsa si sabes, contar hasta 10"},
+s4:{name:"Normas y microgestión",short:"Sesión 4",ses:1,c:"#8A5CE0",t:"#F1E8FF",desc:"A tu sitio, noes y síes, renuncias"},
+s56:{name:"El paseo y extinción",short:"Sesiones 5–6",ses:1,c:"#18A97F",t:"#DDF6EE",desc:"Tres paseos y premios sociales"},
+extra:{name:"Atención y básicos",short:"Básicos",c:"#E5573F",t:"#FFE6E1",desc:"Nombre, mírame, tumbado, target"},
+tricks:{name:"Trucos",short:"Trucos",c:"#E39A00",t:"#FFF1CC",desc:"Juego mental y vínculo"},
+care:{name:"Manejo y cuidados",short:"Manejo",c:"#6B7A90",t:"#E9EDF3",desc:"Veterinario, cepillado, estímulos"}
+};
+var DIFF=["","Fácil","Medio","Avanzado"];
+var EX=[
+{id:"vinc",cat:"s1",src:1,n:"Vinculación",d:1,m:5,mat:"Nada: ni comida ni juguete",v:"https://vimeo.com/399117868/4318d9ee2f",s:["Solo vosotras dos: sin pelota, sin premios, sin nada más.","Di «{dog}» y a continuación palabras y gestos amigables.","Cuando se interese por ti: caricias de voz y táctiles a su gusto. «Muuuy bien» si aumenta la atención o se acerca.","No la fuerces a acercarse ni la retengas.","Para evaluar: aléjate y ofrécele una nueva posibilidad de acercarse."],tip:"Palabras prohibidas en este ejercicio: ven, toma, mira, aquí o similares. Solo su nombre y palabras amables.",bad:"Usar comida o juguete: aquí buscamos que le interese el vínculo social en sí mismo.",ok:"Al alejarte, vuelve a acercarse y ofrece señales afiliativas. Si deambula sin acercarse, te ve como un «sillón de masaje»; si se aleja o se apacigua, no estaba cómoda."},
+{id:"noinf",cat:"s1",src:1,n:"No informativo",d:2,m:3,mat:"Situaciones del día a día",v:"https://vimeo.com/399457920/f9f3a20fdf",s:["Cuando {dog} inicie una acción incorrecta, di «no» con tono tranquilo y positivo.","El «no» es una ayuda, no un enfado: le informa de que eso no es lo que le pides.","En cuanto abandone ese rumbo de acción: «muy bien».","Empieza con situaciones de baja intensidad emocional, que pueda dejar con facilidad."],tip:"Bien montado, el «no» le ayuda a tener éxito y a coordinarse contigo sin conflicto.",bad:"Usarlo con enfado o subiendo el tono: deja de ser informativo.",ok:"Al oír «no», abandona voluntariamente lo que había empezado (si la emoción no le supera)."},
+{id:"juego",cat:"s1",src:1,n:"Espacio de juego",d:2,m:8,mat:"Juguete de tira o pelota",v:"https://vimeo.com/400399013/b5a13a02de",s:["Activa a {dog} poco a poco con «Ach», como un acelerador.","Juega con el juguete coordinándote con ella: «trae» para que te lo traiga.","Pide «suelta» y, al soltar, «muy bien» y sigue el juego.","Si tiene que buscar el juguete, usa «busca».","Termina siempre con «Nada más» para que se desconecte del juego."],tip:"El juego le enseña a moldear su instinto de caza y a coordinarse contigo en estados de máxima activación. 5–10 min cada vez.",bad:"Acabar sin «Nada más»: le cuesta desconectar y aparece la sobreexcitación.",ok:"Trae, suelta y se desactiva con «Nada más» sin quedarse revolucionada."},
+{id:"llamada",cat:"s1",src:1,n:"La llamada",d:1,m:5,mat:"2 personas · arnés o collar · comida",v:"https://vimeo.com/400398492/82469e9f59",s:["Una persona sujeta a {dog} por el arnés (cogido en la espalda) o por el collar.","La otra le enseña comida y se aleja.","Quien se ha alejado se coloca en posición de llamada y dice «{dog}, ven».","{dog} viene, pero la conducta no está completa hasta que se sienta delante.","Cuando se siente: «muy bien», cuenta 1001, 1002, premia, y cuenta de nuevo 1001, 1002.","«¡Ale!»: libérala y dale vinculación social."],tip:"En casa: 2 llamadas de frente, 2 de espaldas y 2 con obstáculos (cámbialos), con presión pasiva.",bad:"Premiar antes de que se siente: la llamada termina sentada delante de ti.",ok:"Llega y se sienta delante sin que tengas que pedírselo, 4 de cada 5 veces."},
+{id:"llamadaprob",cat:"s1",src:1,n:"Llamada · solución de problemas 1",d:2,m:5,mat:"Comida · una pared",v:"https://vimeo.com/399485351/5b601c40c6",s:["Empieza con un par de llamadas sencillas con presión pasiva.","Llámala estando tú de espaldas.","Llámala hacia un lado, y luego hacia el otro.","Llámala de cara a la pared: tendrá que sentarse a tu lado, lo más cerca posible.","Acierto: «muy bien» y premio. Error: «no» informativo y le das otra oportunidad."],tip:"Equivocarse es normal y hasta conveniente: es como comprueba que entiende la conducta.",bad:"Darle la solución tú: la comprensión exige que ella se esfuerce.",ok:"80 % de aciertos (4 de cada 5) para subir de nivel.",pyr:[["R1","Fácil","Llamada directa con presión pasiva (alguien la sujeta), a corta distancia"],["R2","Difícil","Llamada de espaldas, hacia un lado o de cara a la pared"],["R3","Fácil","Vuelve a una llamada directa y sencilla para cerrar con éxito"]]},
+{id:"esperatuyo",cat:"s1",src:1,n:"Aguanta y gana (espera y tuyo)",d:2,m:4,mat:"Comida en mano, cuenco o mesa",v:"https://vimeo.com/504723872/1f5976d498",s:["Pon comida en tu mano o en una superficie (mesa, cuenco, suelo).","Cuando intente cogerla, di «espera» y cierra un poco la mano.","Si hace falta, sujétala suavemente con la mano en el pecho.","Debe esperar en posición neutra, a cuatro patas.","Di «tuyo» con tono normal, sin excitarla. Al principio, no tardes mucho en decirlo.","Si se desconecta de la comida, mueve un poco la mano para conectarla."],tip:"Practícalo cada vez que le vayas a dar un trozo de comida.",bad:"Decirle «no»: no es «deja de hacer», es «aguántate las ganas».",ok:"Aguanta 2 minutos ante la comida con un solo «espera» hasta el «tuyo»."},
+{id:"sentadoneutra",cat:"s1",src:1,n:"Luring y sentado en guía neutra",d:1,m:3,mat:"Comida",s:["Haz 2 repeticiones de sentado guiándola con comida (luring).","Después, colócate en posición de guía neutra, sin señuelo.","Pide sentado 5 veces.","Cada acierto: «muy bien» y premio. Libera con «ale»."],tip:"Repeticiones cortas y limpias: 2 con señuelo + 5 en neutra.",bad:"Seguir usando la comida como señuelo en las 5 repeticiones neutras.",ok:"Se sienta en guía neutra 4 de cada 5 veces."},
+{id:"puertabusca",cat:"s1",src:1,n:"Espera en la puerta + busca",d:1,m:2,mat:"Comida para el busca",s:["Antes de salir, pide «espera».","Debe esperar a que abras la puerta y salgas tú primero.","Si se mantiene estable: «ale» para liberarla.","Nada más salir, tírale un «busca» (comida al suelo para olfatear)."],tip:"Hazlo en cada salida: convierte un momento de excitación en autocontrol.",bad:"Salir a la vez que ella si se ha movido: vuelve a empezar con calma.",ok:"Espera estable hasta que sales tú y oye «ale»."},
+{id:"permanencia",cat:"s2",src:1,n:"Permanencia formal en sentado",d:2,m:5,mat:"Comida",s:["Pide sentado y la señal de permanencia que te enseñó la educadora.","Trabaja distancia (pasos) y tiempo por separado: sube solo una cosa a la vez.","Vuelve siempre tú junto a {dog} para confirmar con «muy bien» y premiar en posición.","Libera con «ale».","Sigue la pirámide: una repetición fácil, una difícil y otra fácil."],tip:"El objetivo es que gestione la inquietud de verte alejarte. Si se levanta, la repetición difícil era demasiado difícil.",bad:"Subir distancia y tiempo a la vez.",ok:"80 % de aciertos en el nivel antes de subir distancia o tiempo.",gap:"La palabra exacta de permanencia y el criterio para pasar de nivel.",pyr:[["E1 · R1","Fácil","1 paso · 5 s"],["E1 · R2","Difícil","1 paso · 10 s"],["E1 · R3","Fácil","1 paso · 5 s"],["E2 · R1","Fácil","1 paso · 10 s"],["E2 · R2","Difícil","2 pasos · 10 s"],["E2 · R3","Fácil","1 paso · 5 s"]]},
+{id:"vamos",cat:"s2",src:1,n:"Vamos {dog}, juega conmigo",d:2,m:5,mat:"Su comedero lleno",s:["Camina con el comedero lleno en la mano.","{dog} tiene que ir a tu lado de forma estable y homogénea.","Si se adelanta o salta al comedero, no avances hasta que se recoloque.","Cuando haya caminado estable a tu lado: «tuyo» y deja el comedero."],tip:"Trabaja la impulsividad: la comida llega por caminar contigo, no por lanzarse.",bad:"Darle el «tuyo» con ella acelerada o saltando.",ok:"Camina estable a tu lado todo el recorrido hasta el «tuyo».",gap:"Distancia o tiempo de recorrido y qué hacer si se lanza al comedero."},
+{id:"eh",cat:"s2",src:1,n:"Concentración «¡Eh!»",d:2,m:3,mat:"Comida para luring",s:["Cuando {dog} se distraiga, da un toque de atención suave: «¡Eh!».","Justo después, guíala con comida (luring) hacia el rumbo adecuado.","Cuando retome el rumbo: «muy bien».","Observa su lenguaje corporal: si se aparta, se lame o gira la cabeza, baja la intensidad."],tip:"Es una exigencia suave para captar la atención, nunca un susto.",bad:"Decirlo tan fuerte que provoque apaciguamiento: tiene que sumar atención, no miedo.",ok:"Al oír «¡Eh!» vuelve contigo sin mostrar señales de apaciguamiento.",gap:"Cómo y cuándo retirar el luring tras el «¡Eh!»."},
+{id:"pulsa",cat:"s3",src:1,n:"Pulsa si sabes",d:3,m:4,mat:"Comida",s:["Di palabras que conoce («sienta») mezcladas con otras que no («gazpacho»).","{dog} solo debe actuar ante las palabras que conoce.","Si responde a la conocida: «muy bien» y premio.","Si actúa ante una desconocida: «no» informativo, sin enfado.","Usa el mismo tono para todas las palabras: tiene que escuchar, no adivinar."],tip:"Discriminación cognitiva: comprueba que entiende la palabra y no solo tu gesto o tu tono.",bad:"Acompañar la palabra conocida con un gesto: así no sabes si discrimina el sonido.",ok:"80 % de aciertos mezclando conocidas y desconocidas.",gap:"Cuántas palabras por serie y en qué proporción."},
+{id:"contar10",cat:"s3",src:1,n:"Contar hasta 10",d:3,m:3,mat:"Plato · 10 trozos de comida",s:["Pide «espera» con el plato delante.","Deja caer los trozos de comida en el plato de uno en uno, contando hasta 10.","Si se lanza antes de tiempo, retira el plato y vuelve a empezar.","Al llegar a 10 y si sigue esperando: «tuyo»."],tip:"Tolerancia a la frustración: ve cómo aumenta su «sueldo» gota a gota.",bad:"Ir demasiado rápido o demasiado lento al principio: busca que gane.",ok:"Espera los 10 trozos sin lanzarse.",gap:"Si se reinicia la cuenta desde cero o desde donde se lanzó."},
+{id:"llamadadist",cat:"s3",src:1,n:"Llamada con distracciones",d:3,m:5,mat:"2 personas · comida · juguetes",s:["Calienta con un par de llamadas sencillas sin distracciones.","Llámala mientras está distraída, o mientras otra persona intenta jugar con ella.","Prueba también escondiéndote, o con alguien ofreciéndole comida o juguetes.","Si va hacia la distracción: «no» informativo. Si viene y se sienta: «muy bien» y premio.","Cierra con una llamada sencilla."],tip:"La persona que distrae debe hacerlo de forma controlada: la dificultad la marcas tú.",bad:"Empezar directamente con la distracción más fuerte.",ok:"Viene y se sienta con alguien distrayéndola, 4 de cada 5 veces.",pyr:[["R1","Fácil","Un par de llamadas de calentamiento sin distracciones"],["R2","Difícil","Escondida, o alguien ofreciendo comida o juguetes (usa el «no» si hace falta)"],["R3","Fácil","Una última llamada sencilla para cerrar con éxito"]]},
+{id:"sitio",cat:"s4",src:1,n:"A tu sitio",d:2,m:6,mat:"Su cama · comida",s:["Envía a {dog} a su cama lanzando comida sobre ella.","Cuando esté en la cama, premia la permanencia con refuerzos espaciados.","Sigue los tiempos de la pirámide.","Libera con «ale» solo después de haberla premiado en la cama."],tip:"Busca que se aleje de estímulos interesantes para ir a su sitio por sí misma.",bad:"Liberarla justo cuando se levanta: le enseñas que levantarse termina el ejercicio.",ok:"Aguanta la duración del nivel con los refuerzos espaciados.",gap:"Qué palabra usar para enviarla («a tu sitio») y cuándo dejar de lanzar comida.",pyr:[["R1","Fácil","1 min en total · refuerzo cada 15 s"],["R2","Difícil","2 min en total · refuerzo cada 30 s"],["R3","Fácil","3 min · refuerzo cada minuto si tiene fondo; si no, vuelve a una duración menor"]]},
+{id:"noesyies",cat:"s4",src:1,n:"Noes y síes",d:2,m:3,mat:"Cuenco con comida",s:["Pon un cuenco con comida a su alcance.","Si se acerca sin permiso: «no» para que se aparte.","Cuando se aparte: «muy bien».","Alterna: a veces «tuyo» para que acceda al cuenco."],tip:"Combina el «no» y el «tuyo»: le enseña que el permiso depende de ti.",bad:"Usar siempre el mismo orden: si lo puede predecir, no está escuchando.",ok:"Se aparta con el «no» y solo accede con el «tuyo».",gap:"Cuántas repeticiones de «no» antes de un «tuyo»."},
+{id:"renuncias",cat:"s4",src:1,n:"Pequeñas renuncias",d:2,m:5,mat:"Comida o juguetes fuera de su alcance",s:["Deja comida o juguetes a la vista, fuera del alcance de {dog}.","Ignóralos tú también: no los mires ni intervengas.","Espera hasta que {dog} deje de prestarles atención por sí misma.","Cuando renuncie: «muy bien» con calma."],tip:"Renuncia autónoma: el objetivo es no tener que intervenir de forma constante.",bad:"Decirle «no» todo el rato: entonces no renuncia ella, la frenas tú.",ok:"Deja de interesarse por el objeto sin que intervengas.",gap:"Cuánto tiempo esperar y si hay que premiar la renuncia o no."},
+{id:"dirigido",cat:"s56",src:1,n:"Paseo dirigido",d:2,m:10,mat:"Correa",s:["Camina con {dog} a tu lado.","Si se adelanta, da un paso atrás en 45° para recolocarla.","Nada de tirones secos: la recolocación es suave.","Cuando vuelva a tu lado: «muy bien» y seguid."],tip:"Es el paseo por necesidad: aceras con gente, cruces, tramos estrechos.",bad:"Recolocar con tirones de correa.",ok:"Va a tu lado en tramos cortos sin tener que recolocarla."},
+{id:"tranquilo",cat:"s56",src:1,n:"Paseo tranquilo",d:1,m:15,mat:"Correa larga",s:["Dile «libre»: {dog} elige el rumbo, pero no el ritmo.","Déjala explorar y olfatear con libertad.","Si tensa la correa: media vuelta.","Modela su rumbo con suavidad, sin bloqueos bruscos."],tip:"Es el paseo de exploración: debe ser la mayor parte del tiempo de calle.",bad:"Dejar que marque el ritmo tirando.",ok:"Explora con la correa floja casi todo el paseo."},
+{id:"sintonizado",cat:"s56",src:1,n:"Paseo sintonizado",d:3,m:10,mat:"Correa",s:["Ante algo que le dé miedo, reduce la correa para darle seguridad.","Haz arcos de disipación: rodea el estímulo en curva en lugar de ir de frente.","Llévala hasta una «plaza segura» donde se tranquilice.","Cuando se recupere, seguid el paseo con calma."],tip:"Le das seguridad en las situaciones de miedo: eres su apoyo, no quien la expone.",bad:"Acercarla al estímulo para que se acostumbre.",ok:"Busca tu apoyo y se recupera rápido en la plaza segura.",gap:"Qué cuenta como «plaza segura» y la forma exacta de los arcos de disipación."},
+{id:"extensible",cat:"s56",src:1,n:"Correa extensible",d:2,m:10,mat:"Correa extensible",s:["Guía con modelado suave e informativo, no con bloqueos.","Usa pulsaciones cortas del freno para orientarla.","Evita bloquear la correa de forma constante.","Cuando se oriente bien: «muy bien»."],tip:"La extensible informa con pulsaciones, no frena todo el rato.",bad:"Dejarla siempre bloqueada: se acostumbra a la tensión.",ok:"Responde a las pulsaciones sin necesitar bloqueos.",gap:"Cómo son las pulsaciones (frecuencia e intensidad)."},
+{id:"extincion",cat:"s56",src:1,n:"Extinción de premios",d:3,m:4,mat:"Comida (cada vez menos)",s:["Pide una conducta conocida y premia con comida.","Pide la conducta sin enseñar comida y refuerza solo con caricias o juego social.","Termina con una conducta muy sencilla y afecto o juego.","Poco a poco, la recompensa pasa a ser vuestra relación."],tip:"El objetivo es que haga las cosas por satisfacción social, no solo por comida.",bad:"Quitar la comida de golpe en conductas que aún no están firmes.",ok:"Hace las conductas conocidas sin comida a la vista, con el mismo entusiasmo.",pyr:[["P1","Fácil","Pide «sienta» y premia con comida"],["P2","Difícil","Pide la conducta sin enseñar comida; al final, solo caricias o juego"],["P3","Fácil","Pide algo muy sencillo y premia con afecto o juego"]]},
+{id:"nombre",cat:"extra",n:"Atención al nombre",d:1,m:3,mat:"Premios pequeños",s:["En un sitio tranquilo, di «{dog}» una sola vez con tono alegre.","En cuanto te mire: «muy bien» y premio.","Repite 5–8 veces. Si no te mira en 2 s, haz un ruidito suave, pero no repitas el nombre.","Sube la dificultad: dilo cuando esté olfateando o mirando a otro lado."],tip:"Su nombre debe anunciar cosas buenas. No lo uses nunca para regañar.",bad:"Repetir el nombre varias veces: le enseñas a ignorar las primeras.",ok:"Te mira a la primera 8 de cada 10 veces, con pequeñas distracciones."},
+{id:"mirame",cat:"extra",n:"Mírame (contacto visual)",d:1,m:3,mat:"Premios",s:["Sujeta un premio en la mano cerrada, con el brazo estirado hacia un lado.","{dog} mirará la mano. Espera en silencio, sin moverte.","En el instante en que desvíe la mirada a tus ojos: clic y premio.","Cuando lo haga rápido, añade la palabra «mírame» justo antes.","Pide 2–3 segundos de mirada antes del clic."],tip:"Es la base de la atención en el paseo: practícalo en sitios distintos.",bad:"Decirle «mírame» mientras mira la mano: la palabra aún no significa nada.",ok:"Mantiene 3 s de contacto visual con la palabra, en casa y en la calle."},
+{id:"tumbado",cat:"extra",n:"Tumbado",d:2,m:5,mat:"Premios · alfombra",s:["Pide sentado y pon un premio en su nariz.","Baja el premio en vertical hasta el suelo, entre sus patas, y aléjalo un poco hacia ti.","Cuando los codos toquen el suelo: clic y premio en el suelo.","Si se levanta, premia aproximaciones: cabeza abajo, hombros abajo…","Retira el señuelo y añade la palabra «tumba»."],tip:"Empieza en una superficie cómoda: en suelo frío cuesta más.",bad:"Ir demasiado rápido. Si falla 2 veces seguidas, vuelve al paso anterior.",ok:"Se tumba con la palabra, sin señuelo, 8 de cada 10 veces."},
+{id:"target",cat:"extra",n:"Toque de mano (target)",d:1,m:3,mat:"Premios",s:["Presenta la palma abierta a 5 cm de su nariz.","Cuando la toque con el hocico: clic y premio.","Retira la mano y vuelve a presentarla, a distintos lados y alturas.","Añade «toca». Aleja la mano para que tenga que caminar hacia ella."],tip:"Útil para recolocarla, para llamadas cortas y para subir a la báscula.",bad:"Acercar la mano a su nariz: es ella quien debe ir a la mano.",ok:"Toca la mano con la palabra desde 2 m."},
+{id:"choca",cat:"tricks",n:"Choca la pata",d:1,m:3,mat:"Premios",s:["Pide sentado. Pon un premio en tu mano cerrada a la altura de su pecho.","Muchos perros dan con la pata: en cuanto la levante, clic y premio.","Presenta después la mano abierta en vertical; clic cuando la toque.","Añade la palabra «choca»."],tip:"Prueba con las dos patas, con palabras distintas.",bad:"Cogerle la pata: tiene que ofrecerla ella.",ok:"Choca con la palabra y la mano abierta."},
+{id:"gira",cat:"tricks",n:"Gira",d:1,m:3,mat:"Premios",s:["Con un premio en su nariz, dibuja un círculo amplio a la altura de su cabeza.","Al completar la vuelta: clic y premio.","Reduce el gesto hasta un pequeño giro de muñeca.","Añade «gira» y enséñalo hacia el otro lado con otra palabra («vuelta»)."],tip:"Calentamiento ideal antes de ejercicios más difíciles.",bad:"Un círculo muy cerrado: se pierde y se frustra.",ok:"Gira hacia los dos lados solo con la palabra."},
+{id:"reverencia",cat:"tricks",n:"Reverencia",d:2,m:4,mat:"Premios",s:["Con {dog} de pie, lleva el premio de su nariz hacia el suelo, entre sus patas delanteras.","Clic en cuanto bajen los codos con el trasero aún arriba (antes de que se tumbe).","Al principio puedes poner el brazo bajo su tripa para ayudar.","Añade la palabra «reverencia»."],tip:"Captura también las reverencias espontáneas al estirarse.",bad:"Clic tarde: si se tumba entera, estarás premiando el tumbado.",ok:"Hace la reverencia con la palabra 3 veces seguidas."},
+{id:"manejo",cat:"care",n:"Manejo de patas y orejas",d:1,m:2,mat:"Premios",s:["Toca brevemente un hombro: clic y premio.","Desliza la mano hacia una pata y tócala 1 segundo: clic y premio.","Progresa: sujetar la pata 1 s → 3 s → tocar uñas.","Igual con orejas, boca y cola.","Si se aparta, respétalo y vuelve a un paso más fácil."],tip:"Sesiones de 1–2 minutos. Prepara visitas al veterinario y el corte de uñas.",bad:"Sujetarla a la fuerza: rompe la confianza que estás construyendo.",ok:"Deja tocar las 4 patas y las orejas relajada."},
+{id:"cepillo",cat:"care",n:"Cepillado positivo",d:1,m:3,mat:"Cepillo · premios",s:["Enseña el cepillo: clic y premio. Repite hasta que lo mire con interés.","Toca su lomo con el dorso del cepillo: clic y premio.","Una pasada suave → premio. Luego 2–3 pasadas por premio.","Para antes de que se canse o se mueva."],tip:"Empieza por zonas que le gusten (lomo) y deja las sensibles para más adelante.",bad:"Hacer sesiones largas porque está quieta: termina siempre en positivo.",ok:"Acepta 1 min de cepillado con premios espaciados."},
+{id:"miraeso",cat:"care",n:"Mira eso (estímulos)",d:3,m:5,mat:"Premios top · distancia",s:["Busca una distancia en la que {dog} vea el estímulo (perro, bici) y siga tranquila.","En el momento en que lo mire: clic y premio.","Pronto mirará el estímulo y luego a ti, esperando el clic: eso es lo que buscas.","Si ladra, tira o se queda fija: aléjate. Estás demasiado cerca.","Reduce la distancia muy poco a poco, en días distintos."],tip:"La distancia es tu mejor herramienta. Mejor lejos y con éxito que cerca y con tensión.",bad:"Acercarte demasiado rápido: un mal encuentro retrasa semanas.",ok:"Mira a un perro a 10 m y vuelve a mirarte tranquila."},
+{id:"rodar",cat:"tricks",n:"Rodar",d:2,m:4,mat:"Premios · alfombra",s:["Pide tumbado.","Lleva el premio desde su nariz hacia su hombro, para que se tumbe de lado.","Sigue el movimiento por encima del lomo para que gire sobre la espalda.","Cuando complete la vuelta: «muy bien» y premio.","Reduce el gesto a un giro de mano y añade «rueda»."],tip:"Hazlo en superficie blanda y siempre hacia el mismo lado al principio.",bad:"Empujarla para que gire: tiene que seguir el premio ella.",ok:"Rueda completa con la palabra y un gesto pequeño."},
+{id:"bang",cat:"tricks",n:"¡Bang! (hacerse la muerta)",d:3,m:4,mat:"Premios · alfombra",s:["Empieza desde tumbado de lado (la mitad de «rodar»).","Premia cuando se quede tumbada de lado, quieta, 1 s.","Alarga a 3–5 s antes de premiar.","Añade la señal: «¡bang!» con la mano en forma de pistola.","Libera con «ale»."],tip:"Enséñalo después de «rodar»: comparten el primer paso.",bad:"Premiar mientras se levanta: el premio va en el suelo, tumbada.",ok:"Se tumba de lado con «¡bang!» y aguanta 5 s."},
+{id:"ochos",cat:"tricks",n:"Ochos entre piernas",d:2,m:4,mat:"Premios",s:["De pie con las piernas abiertas, guía a {dog} con un premio para que pase entre ellas.","Llévala alrededor de una pierna y de vuelta por el centro.","Repite por la otra pierna para dibujar un 8.","Reduce el señuelo a un gesto con la mano y añade «ochos»."],tip:"Coordina vuestro movimiento: muy bueno para el vínculo y el paseo dirigido.",bad:"Ir muy rápido al principio: primero medio ocho, luego uno entero.",ok:"Hace 2 ochos seguidos con un gesto de mano."},
+{id:"atras",cat:"tricks",n:"Marcha atrás",d:2,m:3,mat:"Premios · un pasillo",s:["En un pasillo estrecho, colócate frente a ella.","Da un paso pequeño hacia ella; si recula un paso: «muy bien» y premio.","Pide 2 o 3 pasos antes de premiar.","Añade la palabra «atrás»."],tip:"Le da conciencia de las patas traseras: base para muchos trucos.",bad:"Echarte encima: el paso tiene que ser suave.",ok:"Recula 3 pasos con la palabra, sin pasillo."},
+{id:"patas",cat:"tricks",n:"Patas arriba (en un objeto)",d:1,m:3,mat:"Caja o escalón estable",s:["Pon un escalón o caja estable delante de ella.","Guíala con el premio para que suba las patas delanteras.","Con las dos patas arriba: «muy bien» y premio.","Añade «arriba» y prueba con otros objetos seguros."],tip:"El objeto tiene que ser firme: si se mueve, le cogerá miedo.",bad:"Objetos inestables o resbaladizos.",ok:"Sube las patas a 3 objetos distintos con la palabra."},
+{id:"verguenza",cat:"tricks",n:"Vergüenza (pata al hocico)",d:3,m:4,mat:"Pegatina o cinta suave",s:["Pega un trocito de cinta suave en su hocico.","Cuando levante la pata para quitársela: «muy bien» y premio.","Repite y retira la cinta cuando ya levante la pata hacia el hocico.","Añade «¿vergüenza?»."],tip:"Truco muy vistoso; tiene que ser un juego, nunca una molestia.",bad:"Cinta que tire del pelo: usa algo muy suave o un post-it.",ok:"Se tapa el hocico con la pata con la palabra."},
+{id:"nombres",cat:"tricks",n:"Trae por nombre",d:3,m:5,mat:"2–3 juguetes distintos",s:["Nombra un juguete mientras juegas con él («pelota»).","Ponlo en el suelo y pide «trae la pelota»: «muy bien» y juego al traerlo.","Añade un segundo juguete al lado y pide solo la pelota.","Si trae el otro: «no» informativo y vuelve a pedir.","Cuando acierte, enseña el nombre del segundo juguete."],tip:"Discriminación: combina con «Pulsa si sabes».",bad:"Cambiar de sitio los juguetes siempre igual: así aprende posiciones, no nombres.",ok:"Trae el juguete correcto entre 2, 4 de cada 5 veces."},
+{id:"saludo",cat:"extra",n:"Saludo sin saltar",d:2,m:5,mat:"Una persona ayudante · premios",s:["Con correa, que una persona se acerque despacio a {dog}.","Si se mantiene con las cuatro patas en el suelo, la persona sigue acercándose.","Si salta: «no» informativo y la persona se gira y se aleja un paso.","Cuando esté a su lado con las cuatro patas en el suelo: «muy bien», premio y la persona la saluda con calma.","Libera con «ale» y repite con otras personas."],tip:"El saludo es el premio: solo llega con las cuatro patas en el suelo.",bad:"Saludarla o tocarla mientras salta, aunque sea para apartarla: también es atención.",ok:"Recibe a una persona sin saltar, 4 de cada 5 veces."},
+{id:"bordillo",cat:"extra",n:"Sentarse en el bordillo",d:1,m:5,mat:"Correa · premios",s:["Al llegar a un bordillo, para antes del borde.","Pide sentado.","Cuando se siente: «muy bien» y premio.","Espera 2–3 s, mira a los lados y cruzad con «ale».","Repítelo en cada cruce del paseo."],tip:"Con práctica se sentará sola al llegar al bordillo: premia mucho esas veces.",bad:"Cruzar sin que se haya sentado «porque hay prisa»: el criterio se rompe enseguida.",ok:"Se sienta en el bordillo sin que se lo pidas."},
+{id:"emergencia",cat:"extra",n:"Llamada de emergencia",d:2,m:3,mat:"Premio especial (jamón, queso, salchicha)",s:["Elige una palabra o silbato que no uses nunca para nada más.","Dila una vez y dale inmediatamente un premio especial y abundante («jackpot»), aunque no haya hecho nada.","Repite 5 veces al día durante una semana, en casa.","Empieza a decirla cuando esté a 1–2 m y celébralo a lo grande al llegar.","Úsala de verdad solo en emergencias, y repásala cada semana para que no pierda valor."],tip:"Esta llamada siempre paga con lo mejor que tengas: es tu seguro de vida.",bad:"Usarla para algo desagradable, o gastarla en llamadas del día a día.",ok:"Corre hacia ti al instante desde cualquier situación, en casa y en zona segura."},
+{id:"campana",cat:"tricks",n:"Toca la campana",d:1,m:3,mat:"Timbre de mesa o campana · premios",s:["Empieza con el toque de mano (target).","Pon la mano detrás del timbre: al tocar la mano, tocará el timbre. «Muy bien» en cuanto suene.","Retira la mano poco a poco: premia cuando toque el timbre solo.","Añade «campana»."],tip:"Base del target: si «toca» ya le sale, esto es rapidísimo.",bad:"Un timbre que suene muy fuerte al principio: puede asustarla.",ok:"Toca el timbre con la palabra, desde 1 m."},
+{id:"otra",cat:"tricks",n:"Dame la otra",d:1,m:3,mat:"Premios",s:["Pide «choca» con la pata de siempre.","Presenta tu mano hacia el lado contrario y espera a que levante la otra pata.","Al levantarla: «muy bien» y premio.","Ponle su propia palabra («la otra») y alterna las dos."],tip:"Discriminación: cada pata tiene su palabra.",bad:"Premiar si da la pata equivocada: «no» informativo y vuelve a pedir.",ok:"Da la pata correcta según la palabra, 4 de cada 5."},
+{id:"besito",cat:"tricks",n:"Besito",d:1,m:2,mat:"Premios · un poco de crema o queso en la mano",s:["Pon un poco de algo rico en el dorso de tu mano.","Cuando la toque con el hocico: «muy bien» y premio de la otra mano.","Repite sin nada en la mano.","Acerca la mano a tu mejilla y añade «besito»."],tip:"Si es muy lamedora, premia el toque con el hocico, no el lametón.",bad:"Acercar tu cara a su cara de golpe: tiene que venir ella.",ok:"Te da un toque en la mejilla con la palabra."},
+{id:"barbilla",cat:"tricks",n:"Cabeza abajo (barbilla)",d:1,m:3,mat:"Premios · una toalla doblada",s:["Pon la palma de tu mano abierta bajo su barbilla, sin tocarla.","Cuando apoye la barbilla aunque sea un instante: «muy bien» y premio.","Alarga el tiempo de apoyo: 1 s, 3 s, 5 s.","Cambia la mano por una toalla o el suelo y añade «barbilla»."],tip:"Muy útil en el veterinario: mantiene la cabeza quieta por voluntad propia.",bad:"Sujetarle la cabeza: el apoyo tiene que ofrecerlo ella.",ok:"Apoya la barbilla 10 s en tu mano o en una toalla."},
+{id:"aro",cat:"tricks",n:"Saltar el aro",d:2,m:4,mat:"Aro de hula hoop · premios",s:["Sujeta el aro tocando el suelo y lanza un premio al otro lado: que pase a través.","Cuando lo cruce: «muy bien».","Sube el aro unos centímetros cada vez.","Añade «hop» y termina con «Nada más» para que se calme."],tip:"Saltos bajos y en suelo que no resbale. Si es joven, consulta la altura con tu veterinario.",bad:"Subir la altura demasiado rápido.",ok:"Salta el aro a la altura de sus codos con la palabra."},
+{id:"gatear",cat:"tricks",n:"Gatear",d:2,m:4,mat:"Premios · alfombra",s:["Pide tumbado.","Lleva el premio pegado al suelo, despacio, hacia delante.","Si avanza sin levantarse: «muy bien» y premio. Si se levanta, vuelve a empezar.","Alarga la distancia y añade «gatea»."],tip:"Ponerte de rodillas y hacer un túnel con tus piernas ayuda al principio.",bad:"Mover el premio demasiado rápido: se levantará para seguirlo.",ok:"Gatea 1 m sin levantarse."},
+{id:"recoger",cat:"tricks",n:"Recoger juguetes",d:2,m:5,mat:"Caja baja · 3 juguetes",s:["Pide «trae» con un juguete, sujetando la caja debajo de su boca.","Pide «suelta»: el juguete cae en la caja. «Muy bien» y premio.","Aleja poco a poco la caja de tu mano y ponla en el suelo.","Añade «recoge» y suma más juguetes."],tip:"Encadena trae, suelta y target: practica antes cada parte.",bad:"Premiar si suelta fuera de la caja.",ok:"Mete 3 juguetes en la caja con una sola palabra."},
+{id:"slalom",cat:"tricks",n:"Slalom",d:2,m:4,mat:"Conos o botellas · premios",s:["Coloca 3 conos en línea, separados un metro.","Guíala con el premio en zigzag entre los conos.","«Muy bien» al terminar la fila.","Reduce el señuelo a un gesto y añade «slalom». Prueba también entre tus piernas mientras andas."],tip:"Ritmo tranquilo primero: la velocidad llega sola.",bad:"Conos demasiado juntos al principio.",ok:"Hace un slalom de 5 conos solo con el gesto."},
+{id:"esconder",cat:"tricks",n:"Esconder la cabeza",d:2,m:4,mat:"Manta o tus brazos · premios",s:["Sujeta una manta formando un hueco, o haz un aro con tus brazos.","Pon un premio dentro: cuando meta la cabeza, «muy bien».","Pide que la mantenga dentro 1–2 s antes de premiar.","Retira el premio del hueco y añade «escóndete»."],tip:"Truco muy vistoso y tranquilo: va bien para terminar una sesión.",bad:"Taparle la cabeza tú: tiene que meterla ella.",ok:"Esconde la cabeza 3 s con la palabra."},
+{id:"cajon",cat:"tricks",n:"Abrir y cerrar (cajón o puerta)",d:3,m:6,mat:"Cuerda o trapo atado al tirador · premios",s:["Para abrir: ata un trapo al tirador y pide «tira» con un juego de tira y afloja.","Cuando tire y abra un poco: «muy bien» y premio.","Para cerrar: usa el target con la mano sobre el cajón; premia cuando lo empuje con la pata o el hocico.","Pon una palabra a cada acción («abre», «cierra»)."],tip:"Usa un cajón ligero y sin cosas que se puedan caer.",bad:"Dejar que juegue con la cuerda cuando no estáis entrenando: dejará de ser una señal.",ok:"Abre y cierra un cajón con dos palabras distintas."},
+{id:"pide",cat:"tricks",n:"Pide (sentada sobre las patas traseras)",d:3,m:3,mat:"Premios · una pared detrás al principio",s:["Solo si es adulta y no tiene problemas de espalda o caderas.","Desde sentado, sube el premio despacio por encima de su cabeza para que levante las patas delanteras.","Premia cuando se equilibre 1 s, aunque sea con ayuda de tu mano.","Sesiones de 3–4 repeticiones como máximo. Añade «pide»."],tip:"Fortalece el core: hazlo poco y bien, nunca seguido.",bad:"Hacerlo con una perra joven o con molestias: pregunta antes a tu veterinario.",ok:"Se equilibra 3 s sin apoyo."},
+{id:"vasos",cat:"tricks",n:"¿Cuál tiene el premio? (vasos)",d:3,m:4,mat:"3 vasos opacos · premios con olor",s:["Esconde un premio bajo un vaso, delante de ella.","Cuando lo toque con la pata o el hocico: «muy bien», levantas el vaso y se lo come.","Pasa a 2 vasos y luego a 3, moviéndolos despacio.","Si señala un vaso vacío: «no» informativo y otra oportunidad."],tip:"Es trabajo de olfato: cuenta como una de sus sesiones de olfato del día.",bad:"Dejar que tire los vasos a golpes: solo cuenta tocarlo.",ok:"Encuentra el premio entre 3 vasos, 4 de cada 5 veces."}
+];
+var LV={
+vinc:["Se acerca y busca contacto en 3 min en casa","Vuelve a ti al ofrecérselo de nuevo, 5 min en un sitio tranquilo de fuera","Busca tu contacto 5 min en la calle, con distracciones lejos"],
+noinf:["Deja la acción con el «no» ante cosas de poco valor, en casa","Deja en menos de 3 s cosas de valor medio","Deja a la primera en la calle (restos, olores)"],
+juego:["Trae y suelta 3 veces y desconecta con «Nada más» en menos de 1 min","5 min de juego y desconecta en menos de 30 s","10 min con alta activación y desconecta en menos de 15 s"],
+llamada:["Viene y se sienta delante desde 3 m","Desde 6 m","Desde 10 m o desde otra habitación"],
+llamadaprob:["80 % con llamadas de espaldas y hacia los lados","80 % de cara a la pared y con obstáculos","80 % combinando posiciones, fuera de casa"],
+esperatuyo:["Aguanta 30 s con un solo «espera»","Aguanta 1 min","Aguanta 2 min (criterio de la educadora)"],
+sentadoneutra:["4 de 5 sentados en guía neutra, en casa","4 de 5 en el portal o el patio","4 de 5 en la calle"],
+puertabusca:["Espera estable hasta que sales tú, en la puerta de casa","Espera 5 s después de que salgas","Espera en el portal y en puertas de la calle"],
+permanencia:["1 paso · 10 s","2 pasos · 20 s","4 pasos · 30 s"],
+vamos:["Estable a tu lado durante 5 m","10 m con un giro","20 m con giros y cambios de ritmo"],
+eh:["Vuelve contigo con «¡Eh!» + luring ante una distracción leve","Vuelve con «¡Eh!» sin luring","Vuelve con «¡Eh!» en la calle"],
+pulsa:["80 % con 1 palabra desconocida por cada 2 conocidas","80 % con mitad y mitad","80 % mezclando 2 conocidas distintas"],
+contar10:["Espera mientras caen 5 trozos","Espera los 10 trozos","10 trozos despacio, uno cada 3 s"],
+llamadadist:["Viene con alguien quieto a 3 m como distracción","Viene con alguien ofreciéndole comida","Viene con alguien jugando con ella, o estando tú escondida"],
+sitio:["1 min en la cama · refuerzo cada 15 s","2 min · refuerzo cada 30 s","3 min · refuerzo cada minuto"],
+noesyies:["Se aparta con el «no» 4 de 5 veces","Se aparta y espera 10 s hasta el «tuyo»","Espera 30 s con el cuenco a su alcance"],
+renuncias:["Deja de mirar el objeto en menos de 2 min","En menos de 1 min","En menos de 30 s, con objetos de mucho valor"],
+dirigido:["1 min a tu lado en una calle tranquila","3 min","5 min con gente y cruces"],
+tranquilo:["5 min con la correa floja","10 min","20 min"],
+sintonizado:["Se recupera en la plaza segura en menos de 2 min","En menos de 1 min","Pasa a distancia media sin necesitar la plaza segura"],
+extensible:["Responde a la pulsación 4 de 5 veces en una calle tranquila","En el parque","Con distracciones"],
+extincion:["Sentado sin comida a la vista, 4 de 5 en casa","3 conductas sin comida, en casa","3 conductas sin comida, en la calle"],
+nombre:["Te mira 8 de 10 veces en casa","8 de 10 en el patio o portal","8 de 10 en la calle"],
+mirame:["1 s de contacto visual","3 s","5 s en la calle"],
+tumbado:["4 de 5 con señuelo","4 de 5 sin señuelo","Solo con la palabra, en la calle"],
+target:["Toca la mano a 10 cm","A 1 m","A 3 m"],
+choca:["Con el premio en la mano cerrada","Con la mano abierta","Solo con la palabra"],
+gira:["Siguiendo el señuelo","Con un gesto pequeño","Solo con la palabra, hacia los dos lados"],
+reverencia:["Baja los codos 1 s","Aguanta 3 s","Con la palabra, 3 seguidas"],
+manejo:["Tocar las patas 1 s","Sujetar cada pata 3 s","Tocar uñas, orejas y boca 5 s"],
+cepillo:["1 pasada por premio","30 s de cepillado","1 min de cepillado"],
+miraeso:["Tranquila a 20 m del estímulo","A 15 m","A 10 m"],
+rodar:["Rueda siguiendo el premio","Con un gesto pequeño","Solo con la palabra"],
+bang:["Tumbada de lado 1 s","3 s","5 s con «¡bang!» y el gesto"],
+ochos:["Medio ocho con señuelo","Un ocho entero con gesto","2 ochos seguidos solo con gesto"],
+atras:["1 paso atrás en el pasillo","3 pasos en el pasillo","3 pasos sin pasillo"],
+patas:["Sube a un escalón con señuelo","Con la palabra","A 3 objetos distintos"],
+verguenza:["Levanta la pata hacia la cinta","Sin cinta, con señuelo","Solo con la palabra"],
+nombres:["Trae un juguete por su nombre","Elige entre 2 juguetes","Elige entre 3 juguetes"],
+saludo:["Sin saltar con una persona conocida","Con visitas en casa","Con desconocidos en la calle"],
+bordillo:["Se sienta cuando se lo pides","Se sienta y espera 3 s","Se sienta sola al llegar al bordillo"],
+emergencia:["Viene corriendo desde 2 m en casa","Desde otra habitación","En zona segura con distracciones"],
+campana:["Toca el timbre con tu mano detrás","Toca el timbre sin tu mano","Desde 1 m con la palabra"],
+otra:["Levanta la otra pata con tu mano en ese lado","Con la palabra","Alterna las dos patas sin fallar"],
+besito:["Toca tu mano con el hocico","Tu mejilla, con la cara cerca","Con la palabra, a la primera"],
+barbilla:["Apoya la barbilla 1 s","5 s","10 s, en tu mano o en una toalla"],
+aro:["Cruza el aro en el suelo","Salta el aro a 10 cm","A la altura de sus codos, con la palabra"],
+gatear:["Gatea 20 cm","50 cm","1 m"],
+recoger:["Suelta 1 juguete en la caja que sujetas","1 juguete en la caja en el suelo","3 juguetes con una sola palabra"],
+slalom:["3 conos con señuelo","5 conos con gesto","Entre tus piernas mientras andas"],
+esconder:["Mete la cabeza con premio dentro","Sin premio dentro, 1 s","3 s con la palabra"],
+cajon:["Tira del trapo y abre un poco","Abre del todo con «abre»","Abre y cierra con dos palabras"],
+pide:["Se equilibra 1 s con ayuda","1 s sin ayuda","3 s sin apoyo"],
+vasos:["Encuentra el premio bajo 1 vaso","Entre 2 vasos","Entre 3 vasos movidos"]};
+EX.forEach(function(e){e.lv=LV[e.id]||["Nivel 1","Nivel 2","Nivel 3"]});
+function PROG(e){return !!CATS[e.cat].ses}
+function okCount(id,l){var n=0;state.sessions.forEach(function(s){if(s.ex===id&&s.lv===l&&s.ok)n++});return n}
+function lvDone(id){var d=0;for(var l=1;l<=3;l++){if(okCount(id,l)>=2)d=l;else break}return d}
+function gDone(){return EX.filter(PROG).every(function(e){return lvDone(e.id)>=3})}
+function gLevel(){var m=3;EX.filter(PROG).forEach(function(e){m=Math.min(m,lvDone(e.id)+1)});return Math.max(1,Math.min(m,3))}
+function gCount(){var g=gLevel();return EX.filter(PROG).filter(function(e){return lvDone(e.id)>=g}).length}
+function curLv(e){var d=lvDone(e.id);return PROG(e)?Math.min(d+1,gLevel(),3):Math.min(d+1,3)}
+function waiting(e){return PROG(e)&&!gDone()&&lvDone(e.id)>=gLevel()}
+function stat(e){var d=lvDone(e.id);if(d>=3)return["Completado","done"];if(waiting(e))return["Nivel "+d+" ✓ · espera al resto","done"];var l=curLv(e),k=okCount(e.id,l);return["Nivel "+l+" · "+k+"/2",(k||d)?"":"new"]}
+var EXI={};EX.forEach(function(e){EXI[e.id]=e});
+var TYPES={
+vinculo:{n:"Vínculo y juego",c:"#D2457F",t:"#FFE3EF",i:"s1",ids:["vinc","juego","extincion"]},
+comun:{n:"Atención y comunicación",c:"#E5573F",t:"#FFE6E1",i:"extra",ids:["nombre","mirame","noinf","eh","pulsa"]},
+llamada:{n:"Llamada",c:"#2C8FE0",t:"#DFF0FF",i:"llamada",ids:["llamada","llamadaprob","llamadadist","target","emergencia"]},
+auto:{n:"Autocontrol",c:"#5B4BE8",t:"#ECE9FF",i:"s2",ids:["esperatuyo","contar10","noesyies","renuncias","puertabusca","vamos","saludo"]},
+pos:{n:"Posiciones y permanencia",c:"#8A5CE0",t:"#F1E8FF",i:"s4",ids:["sentadoneutra","tumbado","permanencia","sitio"]},
+paseo:{n:"Paseo",c:"#18A97F",t:"#DDF6EE",i:"s56",ids:["dirigido","tranquilo","sintonizado","extensible","bordillo"]},
+trucos:{n:"Trucos",c:"#B06F00",t:"#FFF1CC",i:"tricks",ids:["choca","gira","reverencia","rodar","bang","ochos","atras","patas","verguenza","nombres","campana","otra","besito","barbilla","aro","gatear","recoger","slalom","esconder","cajon","pide","vasos"]},
+manejo:{n:"Manejo y cuidados",c:"#6B7A90",t:"#E9EDF3",i:"care",ids:["manejo","cepillo","miraeso"]}};
+ICON.llamada='<path d="M3 12h11"/><path d="M10 7l5 5-5 5"/><path d="M20 4v16"/>';
+Object.keys(TYPES).forEach(function(k){TYPES[k].ids.forEach(function(id){if(EXI[id])EXI[id].ty=k})});
+var PTS={1:8,2:15,3:25};
+var RATES={1:{l:"Le costó",c:"#C2412E",t:"#FFE6E1",f:'<circle cx="12" cy="12" r="9"/><path d="M8 16c1.2-1.3 2.5-2 4-2s2.8.7 4 2"/><path d="M9 9.5h.01M15 9.5h.01"/>'},2:{l:"Bien",c:"#5B4BE8",t:"#ECE9FF",f:'<circle cx="12" cy="12" r="9"/><path d="M8.5 15h7"/><path d="M9 9.5h.01M15 9.5h.01"/>'},3:{l:"¡Lo bordó!",c:"#13906D",t:"#DDF6EE",f:'<circle cx="12" cy="12" r="9"/><path d="M8 14c1.2 1.6 2.5 2.4 4 2.4s2.8-.8 4-2.4"/><path d="M9 9.5h.01M15 9.5h.01"/>'}};
+var TIPS=["Sesiones cortas (3–5 min) y varias al día funcionan mejor que una larga.","Termina siempre con algo que le salga fácil: así se queda con ganas.","Si falla dos veces seguidas, el paso es demasiado difícil: simplifica.","Premios pequeños, del tamaño de un guisante, para hacer muchas repeticiones.","El «muy bien» marca el instante exacto; el premio llega después, siempre.","Entrena antes de comer, no justo después: estará más motivada.","Cambia de sitio cuando algo ya le sale en casa: los perros generalizan poco."];
+
+/* ---------- state ---------- */
+function def(){return {v:4,dog:"Maya",goal:"toca",weekly:4,marker:"voz",sessionLen:5,sessions:[],daily:{},updated:0}}
+var state;
+(function(){
+ var emb=null,loc=null;
+ try{emb=JSON.parse(document.getElementById("state").textContent)}catch(e){}
+ try{var r=localStorage.getItem(LS);if(r)loc=JSON.parse(r)}catch(e){}
+ state=(emb&&emb.v)?emb:def();
+ if(loc&&(loc.updated||0)>(state.updated||0))state=loc;
+ if(!state.v||state.v<4){state.weekly=4;state.marker="voz";}
+ if(!state.v||state.v<3){state.goal="s1";if(state.dog==="Malla")state.dog="Maya"}
+ if(state.goal!=="toca"&&!TYPES[state.goal])state.goal="toca";state.v=4;
+ var d=def();for(var k in d)if(state[k]===undefined)state[k]=d[k];
+})();
+var ART=null,Q=null,PEND=false;
+try{if(window.claude&&window.claude.use){window.claude.use("artifact").then(function(a){ART=a}).catch(function(){})}}catch(e){}
+function buildDoc(){
+ var css=document.getElementById("css").textContent;
+ var app=document.getElementById("app").textContent;
+ var json=JSON.stringify(state).replace(/</g,"\\u003c");
+ return '<!DOCTYPE html>\n<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#5B4BE8"><title>'+TITLE+'</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="'+FONTS+'" rel="stylesheet"><style id="css">'+css+'</style></head><body><div id="root"></div><div id="overlay"></div><div id="toast"></div><script id="state" type="application/json">'+json+'<\/script><script id="app">'+app+'<\/script></body></html>';
+}
+function save(msg){
+ state.updated=Date.now();
+ try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}
+ if(msg)toast(msg);
+ if(ART){if(Q){PEND=true}else{PEND=false;setTimeout(function(){ART.publish(buildDoc()).catch(function(){})},msg?700:0)}}
+}
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function dog(s){var t=esc(s).replace(/\{dog\}/g,esc(state.dog));t=t.replace(/\bclic\b/g,"«muy bien»").replace(/\bClic\b/g,"«Muy bien»");return t}
+function pad(n){return n<10?"0"+n:""+n}
+function dkey(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function today(){var d=new Date();d.setHours(0,0,0,0);return d}
+function addD(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x}
+function mon(d){var x=new Date(d);var w=(x.getDay()+6)%7;return addD(x,-w)}
+function svg(cat,cls){return '<svg viewBox="0 0 24 24" style="stroke:'+CATS[cat].c+';fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round">'+ICON[cat]+'</svg>'}
+function cvE(e){var T=TYPES[e.ty];return "--c:"+T.c+";--t:"+T.t}
+function svgE(e){var T=TYPES[e.ty];return '<svg viewBox="0 0 24 24" style="stroke:'+T.c+';fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round">'+ICON[T.i]+'</svg>'}
+function cv(cat){return '--c:'+CATS[cat].c+';--t:'+CATS[cat].t}
+function mastery(id){return Math.round(lvDone(id)/3*100)}
+function status(m){return m>=100?["Dominado","done"]:m>=40?["Practicando",""]:m>0?["Aprendiendo",""]:["Nuevo","new"]}
+function catPct(cat){var l=EX.filter(function(e){return e.cat===cat});var s=0;l.forEach(function(e){s+=mastery(e.id)});return Math.round(s/l.length)}
+function xp(){var p=0;state.sessions.forEach(function(s){p+=PTS[s.rating]||0});return p}
+function byDay(){var m={};state.sessions.forEach(function(s){var k=dkey(new Date(s.t));m[k]=(m[k]||0)+1});return m}
+function streak(){var m=byDay(),d=today(),n=0;if(!m[dkey(d)])d=addD(d,-1);while(m[dkey(d)]){n++;d=addD(d,-1)}return n}
+function bestStreak(){var ks=Object.keys(byDay()).sort();var b=0,c=0,prev=null;ks.forEach(function(k){var d=new Date(k+"T00:00:00");if(prev&&dkey(addD(prev,1))===k)c++;else c=1;b=Math.max(b,c);prev=d});return b}
+function weekCount(){var s=mon(today()).getTime(),d={};state.sessions.forEach(function(x){var t=new Date(x.t);if(t.getTime()>=s)d[dkey(t)]=1});return Object.keys(d).length}
+function dots(d){var h='<span class="dots">';for(var i=1;i<=3;i++)h+='<i class="'+(i<=d?"f":"")+'"></i>';return h+'</span>'}
+function plan(){var lv=gLevel(),l;
+ if(state.goal==="toca"){l=EX.filter(function(e){return PROG(e)&&lvDone(e.id)<lv});l.sort(function(a,b){return okCount(b.id,lv)-okCount(a.id,lv)||lastT(a.id)-lastT(b.id)});return l.slice(0,6)}
+ l=EX.filter(function(e){return e.ty===state.goal});
+ l.sort(function(a,b){var wa=(lvDone(a.id)>=3||waiting(a))?1:0,wb=(lvDone(b.id)>=3||waiting(b))?1:0;return wa-wb});return l}
+function lastT(id){var t=0;state.sessions.forEach(function(s){if(s.ex===id)t=Math.max(t,new Date(s.t).getTime())});return t}
+function fmtDate(t){var d=new Date(t);var td=today();var k=dkey(d);if(k===dkey(td))return "Hoy";if(k===dkey(addD(td,-1)))return "Ayer";return d.toLocaleDateString("es-ES",{weekday:"short",day:"numeric",month:"short"})}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove("on")},1800)}
+
+/* ---------- views ---------- */
+var view=(location.hash||"#hoy").slice(1);if(["hoy","ejercicios","progreso"].indexOf(view)<0)view="hoy";
+var libCat="all",libQ="",editing=false;
+var PAW='<svg viewBox="0 0 24 24"><ellipse cx="6" cy="9.5" rx="2" ry="2.6"/><ellipse cx="10" cy="5.8" rx="2" ry="2.6"/><ellipse cx="14.5" cy="5.8" rx="2" ry="2.6"/><ellipse cx="18.5" cy="9.5" rx="2" ry="2.6"/><path d="M12.2 11c2.6 0 5.6 3.6 5.6 6.2 0 2-1.6 2.8-3 2.8-1.1 0-1.7-.6-2.6-.6s-1.5.6-2.6.6c-1.4 0-3-.8-3-2.8 0-2.6 3-6.2 5.6-6.2z"/></svg>';
+
+function header(){
+ var lv=gLevel(),gc=gCount(),gt=EX.filter(PROG).length;
+ return '<header class="hero"><div class="wrap"><div class="hero-top"><div class="avatar">'+PAW+'</div><div><div class="hello">Entrenando con</div>'+
+ (editing?'<div class="dogname"><input class="namein" id="namein" value="'+esc(state.dog)+'" maxlength="20"><button class="edit" data-a="savename">Guardar</button></div>':'<div class="dogname">'+esc(state.dog)+'</div>')+
+ '</div><div class="lvl"><span class="lvl-pill">'+(gDone()?'Programa completado':'Nivel '+lv+' de 3')+'</span><div class="xpbar"><i style="width:'+(gc/gt*100)+'%"></i></div><div class="xptxt">'+gc+' / '+gt+' ejercicios superados</div></div></div>'+
+ '<div class="stats"><div class="stat"><b>'+weekCount()+'/'+state.weekly+'</b><span>días entrenados esta semana</span></div></div></div></header>'+
+ '<div class="wrap"><nav class="tabs">'+[["hoy","Hoy"],["ejercicios","Ejercicios"],["progreso","Progreso"]].map(function(t){return '<button class="tab'+(view===t[0]?" on":"")+'" data-a="tab" data-v="'+t[0]+'">'+t[1]+'</button>'}).join("")+'</nav>';
+}
+function exRow(e,i){
+ var m=mastery(e.id),st=stat(e);
+ return '<div class="exrow" style="'+cvE(e)+'"><div class="tile">'+(i!=null?'<span class="num">'+(i+1)+'</span>':'')+svgE(e)+'</div><button class="mid" data-a="detail" data-id="'+e.id+'" style="text-align:left"><b>'+dog(e.n)+'</b><div class="meta">'+dots(e.d)+''+(e.gap?'<span class="badge gapb">Falta info</span>':'')+(e._rev?'<span class="badge done">Repaso</span>':'<span class="badge '+st[1]+'">'+st[0]+'</span>')+'</div><div class="lvg">'+(lvDone(e.id)>=3?'Los 3 niveles superados':waiting(e)?'Superado · se desbloquea el nivel '+(gLevel()+1)+' cuando todos lo superen':'Objetivo: '+dog(e.lv[curLv(e)-1]))+'</div><div class="mini" style="margin-top:8px"><i style="width:'+m+'%"></i></div></button><button class="go" data-a="start" data-id="'+e.id+'">Empezar</button></div>';
+}
+function gName(){return state.goal==="toca"?"Lo que toca":TYPES[state.goal].n}
+function todayQueue(){var l=plan().filter(function(e){return lvDone(e.id)<3&&!waiting(e)}).map(function(e,i){return [e,lastT(e.id),i]});l.sort(function(a,b){return a[1]-b[1]||a[2]-b[2]});return l.slice(0,4).map(function(x){return x[0].id})}
+function startQueue(){var q=todayQueue();if(!q.length){toast("No hay ejercicios pendientes aquí");return}Q={list:q,i:0};start(q[0])}
+var LVV=1;
+function levelsSheet(){var O=document.getElementById("overlay"),g=gLevel();
+ var h='<div class="scrim" data-a="close"></div><div class="sheet" style="--c:var(--v);--t:var(--vl)"><div class="sh-top"><button class="x" data-a="close">×</button><span class="cat">Objetivos por nivel</span><h3>Qué hay que conseguir en cada nivel</h3><div class="lvtabs">'+[1,2,3].map(function(l){return '<button class="chip'+(LVV===l?" on":"")+'" data-a="lvv" data-v="'+l+'">Nivel '+l+(l<g?' ✓':l>g?' 🔒':'')+'</button>'}).join("")+'</div></div><div class="sh-bd">';
+ Object.keys(TYPES).forEach(function(k){var T=TYPES[k];h+='<div class="h4" style="color:'+T.c+'">'+T.n+'</div><div class="lvs">'+T.ids.map(function(id){var e=EXI[id];if(!e)return "";var d=lvDone(id);return '<button class="lvi'+(d>=LVV?" ok":"")+'" data-a="detail" data-id="'+id+'" style="text-align:left;width:100%"><span>'+(d>=LVV?'✓':LVV)+'</span><div><b>'+dog(e.n)+(PROG(e)?'':' · extra')+'</b>'+dog(e.lv[LVV-1])+'</div></button>'}).join("")+'</div>'});
+ O.innerHTML=h+'</div></div>';O.classList.add("on")}
+var TRACK='';
+function trackBar(){gCard();return TRACK.replace(/<\/div>$/,'<button class="lvbtn" style="margin-top:12px" data-a="levels">Ver qué piden los niveles 1, 2 y 3</button></div>')}
+function actRow(){return '<div class="actrow"><button class="cta" data-a="today"><b>Entrenar hoy</b><small>'+todayQueue().length+' ejercicios guiados · '+gName()+'</small></button></div>'}
+function gCard(){var lv=gLevel(),gc=gCount(),gt=EX.filter(PROG).length,pend=EX.filter(PROG).filter(function(e){return lvDone(e.id)<lv});
+ var tot=gt*3,dn=EX.filter(PROG).reduce(function(a,e){return a+lvDone(e.id)},0),ses=state.sessions.length;
+ TRACK='<div class="track"><div class="tk-h"><b>Progreso del programa</b><span>'+Math.round(dn/tot*100)+'% · '+dn+' de '+tot+' niveles · '+ses+' sesiones</span></div><div class="tk"><i style="width:'+(dn/tot*100)+'%"></i><em style="left:33.33%"></em><em style="left:66.66%"></em></div><div class="tk-l"><span>Nivel 1</span><span>Nivel 2</span><span>Nivel 3</span></div></div>';
+ return '<div class="card gcard"><div class="gl"><span>NIVEL</span><b>'+lv+'</b><small>de 3</small></div><div class="gm"><b>'+(gDone()?'¡Programa completado!':gc+' de '+gt+' ejercicios han superado el nivel '+lv)+'</b><div class="bar" style="--c:var(--v)"><i style="width:'+(gc/gt*100)+'%"></i></div><p>El nivel '+(lv+1>3?3:lv+1)+' se desbloquea cuando todos los ejercicios del programa superen el nivel '+lv+'. Cada nivel se supera con <b>2 sesiones</b> que cumplan su objetivo.'+(pend.length&&pend.length<=6?' Faltan: '+pend.map(function(e){return dog(e.n)}).join(", ")+'.':'')+'</p></div><button class="lvbtn" data-a="levels">Ver qué piden los niveles 1, 2 y 3</button><button class="cta" data-a="today"><b>Entrenar hoy</b><small>'+todayQueue().length+' ejercicios guiados · '+gName()+'</small></button></div>'}
+function vToday(){
+ var h='<section class="sec"><h2>Rutina de hoy</h2>'+routineCard().replace('style="margin-bottom:14px"','')+'</section><section class="sec">'+actRow()+'<div class="goals">';
+ var AUTO={n:"Lo que toca",c:"#1E1B3A",t:"#ECEBF3",desc:"Lo pendiente para subir de nivel"};
+ [["toca",AUTO]].concat(Object.keys(TYPES).map(function(k){return [k,TYPES[k]]})).forEach(function(kv){var k=kv[0],c=kv[1];var ids=k==="toca"?EX.filter(PROG).map(function(e){return e.id}):c.ids;var p=Math.round(ids.reduce(function(a,id){return a+mastery(id)},0)/ids.length);h+='<button class="goal'+(state.goal===k?" on":"")+'" style="--c:'+c.c+';--t:'+c.t+'" data-a="goal" data-v="'+k+'"><span class="chk"><svg viewBox="0 0 12 12"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></span><div class="ic">'+(k==="toca"?'<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>':'<svg viewBox="0 0 24 24">'+ICON[c.i]+'</svg>')+'</div><b>'+c.n+'</b><small>'+(k==="toca"?c.desc:ids.length+' ejercicios')+'</small><div class="mini"><i style="width:'+p+'%"></i></div></button>'});
+ if(false)Object.keys(CATS).forEach(function(k,ix){var c=CATS[k],p=catPct(k);h+='<button class="goal'+(state.goal===k?" on":"")+'" style="'+cv(k)+'" data-a="goal" data-v="'+k+'"><span class="chk"><svg viewBox="0 0 12 12"><path d="M2.5 6.2l2.3 2.3 4.7-5"/></svg></span><div class="ic">'+svg(k)+'</div><b>'+c.name+'</b><small>'+c.desc+'</small><div class="mini"><i style="width:'+p+'%"></i></div></button>'});
+ h+='</div></section>';
+ var p=plan();
+ h+='<section class="sec" id="plan" style="scroll-margin-top:80px"><div><h2>Plan de hoy · '+gName()+'</h2><p class="sub">'+(p.length?(state.goal==="toca"?'Ejercicios que aún no han superado el nivel '+gLevel()+'. Entrena 4 días por semana.':'Sesiones cortas, con descanso y juego entre ejercicios.'):'')+'</p><div class="plan">';
+ if(!p.length)h+='<div class="card empty"><b>¡Objetivo completado!</b>'+esc(state.dog)+' domina todos los ejercicios de este bloque. Elige otro objetivo.</div>';
+ p.forEach(function(e,i){h+=exRow(e,i);delete e._rev});
+ h+='</div></div></section><section class="sec">'+codeCard().replace('style="margin-top:14px"','')+'</section>';
+ return h;
+}
+var ROUT=[{k:"olfato",n:"Trabajo de olfato",sub:"5–10 min, casa o calle",goal:4,min:2},{k:"juguete",n:"Juguete interactivo",sub:"2 al día",goal:2,min:2},{k:"puerta",n:"Espera en la puerta",sub:"en cada salida",goal:3,min:1},{k:"mastic",n:"Masticable disponible",sub:"siempre a su alcance",goal:1,min:1,check:1}];
+function dayRec(){var k=dkey(today());state.daily=state.daily||{};return state.daily[k]||{}}
+function routineCard(){var r=dayRec(),h='<div class="card week" style="margin-bottom:14px"><h2 style="font-size:16px">Pautas de hoy</h2><p class="sub" style="margin:0 0 6px;font-size:13px">De tu educadora (trabajo autónomo).</p>';
+ ROUT.forEach(function(x){var n=r[x.k]||0,ok=n>=x.min;h+='<div class="rr'+(ok?" ok":"")+'"><div class="rr-t"><b>'+x.n+'</b><small>'+x.sub+'</small></div>'+(x.check?'<button class="rck" data-a="rt" data-v="'+x.k+'">'+(n?"Hecho":"Marcar")+'</button>':'<div class="rcnt"><button class="stp" data-a="rtm" data-v="'+x.k+'">–</button><b>'+n+'</b><span>/'+(x.k==="olfato"?"2–4":x.goal)+'</span><button class="stp" data-a="rt" data-v="'+x.k+'">+</button></div>')+'</div>'});
+ return h+'</div>'}
+var CODE=[["{dog}","Atención: me refiero a ti"],["Muy bien","Confirmación: vas bien, sigue"],["No","Informativo: eso no es lo que pido"],["Ale","Liberación: fin del ejercicio"],["Libre","Liberación para andar sola y explorar"],["Espera / Tuyo","Aguántate las ganas / es tuyo"],["Ach","Activación en el juego"],["Trae · Suelta · Busca","Juego con el juguete"],["Nada más","Fin del juego, a desconectar"],["¡Eh!","Exigencia suave"],["Mal","Norma social"]];
+function codeCard(){return '<div class="card week" style="margin-top:14px"><h2 style="font-size:16px;margin-bottom:8px">Código de comunicación</h2>'+CODE.map(function(c){return '<div class="cw"><b>'+dog(c[0])+'</b><span>'+c[1]+'</span></div>'}).join("")+'</div>'}
+function weekCard(){
+ var w=weekCount(),g=state.weekly,pct=Math.min(1,w/g),C=2*Math.PI*38,m=byDay(),s=mon(today()),td=dkey(today());
+ var days="";["L","M","X","J","V","S","D"].forEach(function(l,i){var k=dkey(addD(s,i));days+='<div class="day'+(m[k]?" on":"")+(k===td?" today":"")+'">'+l+'<i></i></div>'});
+ return '<div class="card week"><h2 style="font-size:16px">Objetivo semanal</h2><div class="ring" style="margin-top:10px"><svg viewBox="0 0 92 92"><circle cx="46" cy="46" r="38" fill="none" stroke="#EEEDF5" stroke-width="10"/><circle cx="46" cy="46" r="38" fill="none" stroke="#2FBF97" stroke-width="10" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-pct))+'" transform="rotate(-90 46 46)"/></svg><div><b>'+w+'</b><span style="color:var(--ink3);font-weight:800"> / '+g+'</span><div style="color:var(--ink2);font-size:13px;font-weight:700">'+(w>=g?'¡Semana cumplida!':'días entrenados · objetivo 4')+'</div><div class="wk-set"><button class="stp" data-a="wk" data-v="-1">–</button>meta<button class="stp" data-a="wk" data-v="1">+</button></div></div></div><div class="days">'+days+'</div></div>';
+}
+function vRut(){return '<section class="sec"><h2>Rutina diaria</h2><p class="sub">Pautas de tu educadora y el vocabulario que usáis.</p><div class="two" style="grid-template-columns:1fr 1fr">'+routineCard()+codeCard().replace('style="margin-top:14px"','')+'</div></section>'}
+function vLib(){
+ var h='<section class="sec"><h2>Biblioteca de ejercicios</h2><p class="sub">'+EX.length+' ejercicios clasificados por tipo, paso a paso.</p><div class="filters"><button class="chip'+(libCat==="all"?" on":"")+'" data-a="lc" data-v="all">Todos</button>';
+ Object.keys(TYPES).forEach(function(k){h+='<button class="chip'+(libCat===k?" on":"")+'" data-a="lc" data-v="'+k+'">'+TYPES[k].n+'</button>'});
+ h+='</div><div id="libgrid">'+libGrid()+'</div></section>';
+ return h;
+}
+function libGrid(){
+ var q=libQ.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+ var l=EX.filter(function(e){return(libCat==="all"||e.ty===libCat)&&(!q||e.n.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").indexOf(q)>=0)});
+ if(!l.length)return '<div class="card empty"><b>Sin resultados</b>Prueba con otra palabra.</div>';
+ return Object.keys(TYPES).map(function(k){var g=l.filter(function(e){return e.ty===k}).sort(function(a,b){return a.d-b.d});if(!g.length)return "";var T=TYPES[k];return '<div class="tyg"><h3 class="tyh" style="--c:'+T.c+';--t:'+T.t+'"><span class="tile"><svg viewBox="0 0 24 24" style="stroke:'+T.c+';fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round">'+ICON[T.i]+'</svg></span>'+T.n+'<small>'+g.length+'</small></h3><div class="grid">'+g.map(card).join("")+'</div></div>'}).join("");
+}
+function card(e){var T=TYPES[e.ty];{var m=mastery(e.id),st=stat(e);return '<button class="excard" style="--c:'+T.c+';--t:'+T.t+'" data-a="detail" data-id="'+e.id+'"><div class="bd">'+(PROG(e)?'':'<span class="cat">Extra · no cuenta para el nivel</span>')+'<b>'+dog(e.n)+'</b><div class="meta">'+dots(e.d)+'<span>'+DIFF[e.d]+'</span><span>· '+e.m+' min</span><span class="badge '+st[1]+'">'+st[0]+'</span></div><div class="mini"><i style="width:'+m+'%"></i></div></div></button>'}}
+function vProg(){
+ var S=state.sessions,mins=Math.round(S.reduce(function(a,s){return a+(s.secs||0)},0)/60);
+ var h=trackBar()+'<section class="sec"><h2>Progreso de '+esc(state.dog)+'</h2><p class="sub">Cada nivel se supera con 2 sesiones que cumplan su objetivo.</p><div class="tiles"><div class="card tl"><b>'+S.length+'</b><span>sesiones totales</span></div><div class="card tl"><b>'+mins+'</b><span>minutos entrenados</span></div><div class="card tl"><b>'+bestStreak()+'</b><span>mejor racha (días)</span></div><div class="card tl"><b>'+S.reduce(function(a,s){return a+(s.rewards||0)},0)+'</b><span>aciertos marcados</span></div></div>';
+ // heatmap 16 weeks
+ var m=byDay(),start=addD(mon(today()),-15*7),td=today(),cells="";
+ for(var i=0;i<16*7;i++){var d=addD(start,i),k=dkey(d),n=m[k]||0;cells+='<i class="'+(d>td?"fut":n>=3?"l3":n===2?"l2":n===1?"l1":"")+'" title="'+k+': '+n+' sesiones"></i>'}
+ h+='<div class="two" style="margin-bottom:18px"><div class="card heat"><h2 style="font-size:16px;margin-bottom:12px">Constancia · últimas 16 semanas</h2><div class="hm">'+cells+'</div><div class="legend">Menos <i style="background:#EEEDF5"></i><i style="background:#C9C2FF"></i><i style="background:#9587FF"></i><i style="background:#5B4BE8"></i> Más</div></div>';
+ h+='<div class="card bars"><h2 style="font-size:16px">Dominio por área</h2>';
+ Object.keys(TYPES).forEach(function(k){var T=TYPES[k],p=Math.round(T.ids.reduce(function(a,id){return a+mastery(id)},0)/T.ids.length);h+='<div class="bar-row" style="--c:'+T.c+';--t:'+T.t+'"><div class="tile"><svg viewBox="0 0 24 24" style="stroke:'+T.c+';fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round">'+ICON[T.i]+'</svg></div><div class="lab"><div>'+T.n+'<span>'+p+'%</span></div><div class="bar"><i style="width:'+p+'%"></i></div></div></div>'});
+ h+='</div></div><div class="two"><div class="card log"><h2 style="font-size:16px;padding:12px 0 4px">Historial</h2>';
+ if(!S.length)h+='<div class="empty"><b>Aún no hay sesiones</b>Empieza un ejercicio desde «Hoy» y aparecerá aquí.</div>';
+ S.slice().reverse().slice(0,30).forEach(function(s){var e=EXI[s.ex];if(!e)return;var r=RATES[s.rating];h+='<div class="li" style="'+cvE(e)+'"><div class="tile">'+svgE(e)+'</div><div class="mid"><b>'+dog(e.n)+'</b><small>'+fmtDate(s.t)+(s.lv?' · Nv '+s.lv+(s.ok?' ✓':''):'')+' · '+Math.max(1,Math.round((s.secs||0)/60))+' min · '+(s.miss!=null&&(s.rewards+s.miss)?s.rewards+'/'+(s.rewards+s.miss)+' aciertos ('+Math.round(s.rewards/(s.rewards+s.miss)*100)+'%)':(s.rewards||0)+' premios')+'</small>'+(s.log&&failSummary(e,s.log).tot?'<div class="note" style="font-style:normal;color:#C2412E">Falla en: '+failSummary(e,s.log).list.slice(0,2).map(function(x){return dog(x[0])+' ✗'+x[1]}).join(', ')+'</div>':'')+(s.hold?'<div class="note" style="font-style:normal">Aguante máx. '+fmt1(s.hold)+'</div>':'')+(s.note?'<div class="note">'+esc(s.note)+'</div>':'')+'</div><span class="rate r'+s.rating+'">'+r.l+'</span><button class="del" data-a="del" data-id="'+s.id+'">Borrar</button></div>'});
+ h+='</div><div class="card bars"><h2 style="font-size:16px">En marcha</h2>';
+ var act=EX.filter(function(e){var m=mastery(e.id);return m>0}).sort(function(a,b){return mastery(b.id)-mastery(a.id)});
+ if(!act.length)h+='<p class="sub" style="margin:0">Los ejercicios que empieces aparecerán aquí con su avance.</p>';
+ act.forEach(function(e){var p=mastery(e.id);h+='<div class="bar-row" style="'+cvE(e)+'"><div class="tile">'+svgE(e)+'</div><div class="lab"><div>'+dog(e.n)+'<span>'+(p>=100?"Dominado":p+"%")+'</span></div><div class="bar"><i style="width:'+p+'%"></i></div></div></div>'});
+ h+='</div></div>'+backupCard()+'</section>';
+ return h;
+}
+function render(){
+ var r=document.getElementById("root");
+ r.innerHTML=header()+(view==="hoy"?vToday():view==="ejercicios"?vLib():view==="rutina"?vRut():vProg())+'</div>';
+ if(editing){var n=document.getElementById("namein");n.focus();n.select()}
+}
+
+var MCP=null,DL=null,BKBUSY=false;
+try{if(window.claude&&window.claude.use){window.claude.use("mcp").then(function(m){MCP=m;if(view==="progreso")render()}).catch(function(){});window.claude.use("downloads").then(function(d){DL=d;if(view==="progreso")render()}).catch(function(){})}}catch(e){}
+function bkData(){return JSON.stringify({app:"maya-entreno",exported:new Date().toISOString(),state:state},null,1)}
+function bkErr(e){var c=e&&e.code;return c==="server_not_connected"?"Conecta Google Drive en Ajustes → Conectores de claude.ai.":c==="needs_reauth"?"Vuelve a conectar Google Drive en Ajustes → Conectores.":c==="approval_required"||c==="not_in_manifest"?"Hace falta que permitas el acceso a Google Drive cuando te lo pregunte.":c==="blocked_by_policy"?"Tu organización no permite usar Google Drive desde aquí.":"No se pudo confirmar la copia. Revisa tu Drive antes de volver a intentarlo."}
+function driveBackup(auto){if(!MCP||BKBUSY)return;BKBUSY=true;state.backup=state.backup||{};var day=dkey(today());
+ var go=function(parent){return MCP.callTool("Google Drive","create_file",{title:"maya-entreno-"+day+".json",textContent:bkData(),contentMimeType:"application/json",disableConversionToGoogleType:true,parentId:parent},{cache:false})};
+ var ensure=state.backup.folder?Promise.resolve(state.backup.folder):MCP.callTool("Google Drive","create_file",{title:"Maya Entreno · copias",contentMimeType:"application/vnd.google-apps.folder"},{cache:false}).then(function(r){var p=r.payload||{};var id=p.id||(p.file&&p.file.id);state.backup.folder=id||"";return id||undefined});
+ ensure.then(function(f){return go(f||undefined)}).then(function(){state.backup.last=day;state.backup.err="";BKBUSY=false;render();save(auto?"Copia diaria guardada en Google Drive":"Copia guardada en Google Drive")}).catch(function(e){BKBUSY=false;state.backup.err=bkErr(e);render();toast("La copia no se ha podido hacer")});
+}
+function autoBackup(){if(!MCP){try{var lb=state.backup&&state.backup.last;if(state.sessions.length&&(!lb||(Date.now()-new Date(lb+'T12:00:00'))>7*864e5))setTimeout(function(){toast('Hace más de 7 días sin copia: descárgala en Progreso')},2500)}catch(e){}return}try{if(MCP&&state.sessions.length&&(!state.backup||state.backup.last!==dkey(today())))driveBackup(true)}catch(e){}}
+function backupCard(){var b=state.backup||{};return '<div class="card bars" style="margin-top:18px"><h2 style="font-size:16px">Copia de seguridad</h2><p class="sub" style="margin:0">Tus datos ya se guardan en esta página de tu cuenta. Además, una vez al día, al guardar la primera sesión, se hace una copia en tu Google Drive (carpeta «Maya Entreno · copias»).</p>'+
+ '<div class="bk"><span>Última copia en Drive: <b>'+(b.last?fmtDate(b.last+"T12:00:00"):"ninguna todavía")+'</b></span>'+(b.err?'<span class="bkerr">'+esc(b.err)+'</span>':'')+'</div><div class="bkb">'+
+ (MCP?'<button class="go" data-a="bkdrive">'+(BKBUSY?'Guardando…':'Copiar a Google Drive ahora')+'</button>':'<span class="sub" style="margin:0">En la app instalada los datos se guardan en este móvil. Descarga una copia de vez en cuando y guárdala en Drive.</span>')+
+ '<button class="go ghost" data-a="bkdl">Descargar copia</button>'+'<label class="go ghost" style="cursor:pointer">Restaurar copia<input type="file" id="bkin" accept=".json,application/json" hidden></label></div>'+(RST?'<div class="note-b n-gap" style="margin-top:10px"><b>¿Restaurar?</b>Se sustituirán tus datos actuales por la copia ('+RST.sessions.length+' sesiones). <button class="go" style="margin-top:8px" data-a="bkok">Sí, restaurar</button> <button class="go ghost" data-a="bkno">Cancelar</button></div>':'')+'</div>'}
+function restore(txt){try{var d=JSON.parse(txt);var st=d.state||d;if(!st||!Array.isArray(st.sessions))throw 0;RST=st;render();toast("Copia leída: "+st.sessions.length+" sesiones. Confirma para restaurar")}catch(e){toast("Ese archivo no es una copia válida")}}
+var RST=null;
+/* ---------- detail sheet ---------- */
+function pyr(e,cur,log){return '<div class="pyr">'+e.pyr.map(function(r,i){var ok=0,ko=0;(log||[]).forEach(function(x){if(x[1]===i){if(x[0])ok++;else ko++}});return '<button class="pr'+(r[1]==="Difícil"?" dif":"")+(i===cur?" on":"")+(ko?" ko":"")+'" data-a="pyr" data-v="'+i+'"><span>'+r[0]+'</span><b>'+r[1]+'</b><em>'+dog(r[2])+'</em>'+(log?'<i class="pc">'+(ok?'<u>✓'+ok+'</u>':'')+(ko?'<s>✗'+ko+'</s>':'')+'</i>':'')+'</button>'}).join("")+'</div>'}
+function histFails(e){var ss=state.sessions.filter(function(x){return x.ex===e.id&&x.log}).slice(-5);if(!ss.length)return "";var all=[];ss.forEach(function(x){all=all.concat(x.log)});var best=0;ss.forEach(function(x){best=Math.max(best,x.hold||0)});return '<div class="h4">Dónde falla · últimas '+ss.length+' sesiones</div>'+failBlock(e,all)+(best?'<p class="sub" style="margin-top:8px">Mejor aguante registrado: <b>'+fmt1(best)+'</b></p>':'')}
+function lvList(e){var d=lvDone(e.id),c=curLv(e),g=gLevel();return '<div class="lvs">'+e.lv.map(function(t,i){var l=i+1,cls=l<=d?"ok":(PROG(e)&&l>g?"lock":(l===c?"cur":""));return '<div class="lvi '+cls+'"><span>'+(l<=d?'✓':cls==="lock"?'🔒':l)+'</span><div><b>Nivel '+l+(l===c&&l>d?' · '+okCount(e.id,l)+'/2 sesiones':'')+'</b>'+dog(t)+'</div></div>'}).join("")+'</div>'}
+function detail(id){
+ var e=EXI[id],m=mastery(id),st=stat(e),O=document.getElementById("overlay");
+ O.innerHTML='<div class="scrim" data-a="close"></div><div class="sheet" style="'+cvE(e)+'"><div class="sh-top"><button class="x" data-a="close">×</button><div class="tile">'+svgE(e)+'</div><span class="cat">'+TYPES[e.ty].n+'</span><h3>'+dog(e.n)+'</h3>'+(e.v?'<a class="vid" href="'+e.v+'" target="_blank" rel="noopener">▶ Ver vídeo de la educadora</a>':'')+'</div><div class="sh-bd"><div class="facts"><div class="fact"><small>Nivel</small><b>'+DIFF[e.d]+'</b></div><div class="fact"><small>Duración</small><b>'+e.m+' min</b></div><div class="fact"><small>Estado</small><b>'+st[0]+'</b></div></div><div class="fact" style="margin-bottom:6px"><small>Material</small><b>'+esc(e.mat)+'</b></div><div class="h4">Niveles</div>'+lvList(e)+'<div class="h4">Pasos</div><ol class="steps-l">'+e.s.map(function(s){return '<li>'+dog(s)+'</li>'}).join("")+'</ol><div class="h4">Antes de empezar</div><div style="display:flex;flex-direction:column;gap:8px"><div class="note-b n-tip"><b>Consejo</b>'+dog(e.tip)+'</div><div class="note-b n-bad"><b>Error frecuente</b>'+dog(e.bad)+'</div><div class="note-b n-ok"><b>Lo tiene cuando…</b>'+dog(e.ok)+'</div>'+(e.gap?'<div class="note-b n-gap"><b>Falta confirmar con la educadora</b>'+dog(e.gap)+'</div>':'')+'</div>'+(e.pyr?'<div class="h4">Desglose piramidal</div>'+pyr(e,-1):'')+histFails(e)+'</div><div class="sh-cta"><button class="big" data-a="start" data-id="'+id+'">Empezar ejercicio guiado</button></div></div>';
+ O.classList.add("on");
+}
+function closeO(){if(G&&G.ch&&G.ch.run)clearInterval(G.ch.tid);stopTimer();G=null;if(Q){Q=null;if(PEND)save()}var O=document.getElementById("overlay");O.classList.remove("on");O.innerHTML=""}
+
+/* ---------- guided ---------- */
+var G=null,AC=null;
+function snd(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();var t=AC.currentTime;[0,0.065].forEach(function(o,i){var os=AC.createOscillator(),g=AC.createGain();os.type="square";os.frequency.setValueAtTime(i?1900:2600,t+o);os.frequency.exponentialRampToValueAtTime(700,t+o+0.025);g.gain.setValueAtTime(0.0001,t+o);g.gain.exponentialRampToValueAtTime(i?0.25:0.45,t+o+0.002);g.gain.exponentialRampToValueAtTime(0.0001,t+o+0.04);os.connect(g);g.connect(AC.destination);os.start(t+o);os.stop(t+o+0.05)})}catch(e){}}
+function beep(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();var t=AC.currentTime;[0,0.22,0.44].forEach(function(o){var os=AC.createOscillator(),g=AC.createGain();os.frequency.value=880;g.gain.setValueAtTime(0.0001,t+o);g.gain.exponentialRampToValueAtTime(0.25,t+o+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t+o+0.18);os.connect(g);g.connect(AC.destination);os.start(t+o);os.stop(t+o+0.2)})}catch(e){}}
+function accTxt(){var t=G.rewards+G.miss,p=t?Math.round(G.rewards/t*100):0;return '<b>'+G.rewards+'</b> aciertos · '+G.miss+' no'+(t?' · <span class="'+(p>=80&&t>=5?"g80":"")+'">'+p+'%</span>':'')}
+function start(id){
+ var e=EXI[id];stopTimer();
+ G={ex:id,lv:curLv(e),ok:false,log:[],ch:{run:false,t0:0,cur:0,best:0,holds:[]},step:0,rewards:0,miss:0,total:e.m*60,left:e.m*60,run:false,elapsed:0,phase:"steps",rating:0,note:""};
+ var O=document.getElementById("overlay");O.classList.add("on");renderG();
+}
+function stopTimer(){if(G&&G.tid){clearInterval(G.tid);G.tid=null}if(G)G.run=false}
+function toggleTimer(){
+ if(!G)return;
+ if(G.run){stopTimer();renderTimer();return}
+ if(G.left<=0)G.left=G.total;
+ G.run=true;var last=Date.now();
+ G.tid=setInterval(function(){var n=Date.now(),dt=(n-last)/1000;last=n;G.left=Math.max(0,G.left-dt);G.elapsed+=dt;if(G.left<=0){stopTimer();beep();toast("¡Tiempo! Termina con algo fácil")}renderTimer()},250);
+ renderTimer();
+}
+function fmt(s){s=Math.ceil(s);return Math.floor(s/60)+":"+pad(s%60)}
+function tSecs(t){var m=/(\d+)\s*(min|s)\b/.exec(t||"");if(!m)return 0;return m[2]==="min"?+m[1]*60:+m[1]}
+function fmt1(s){var m=Math.floor(s/60),r=s-m*60;return m+":"+(r<10?"0":"")+r.toFixed(1)}
+function chStop(silent){var c=G.ch;if(!c.run)return;clearInterval(c.tid);c.run=false;c.holds.push(c.cur);c.best=Math.max(c.best,c.cur);if(!silent)renderChrono()}
+function chToggle(){var c=G.ch;if(c.run){chStop();return}c.run=true;c.cur=0;c.t0=Date.now();c.hit=false;var tg=tSecs(EXI[G.ex].lv[G.lv-1]);
+ c.tid=setInterval(function(){c.cur=(Date.now()-c.t0)/1000;if(tg&&!c.hit&&c.cur>=tg){c.hit=true;beep()}paintChrono()},100);renderChrono()}
+function paintChrono(){var el=document.getElementById("chv");if(!el)return;var c=G.ch,tg=tSecs(EXI[G.ex].lv[G.lv-1]);el.textContent=fmt1(c.cur);var b=document.getElementById("chb");if(b&&tg)b.style.width=Math.min(100,c.cur/tg*100)+"%";var w=document.getElementById("chr");if(w)w.classList.toggle("hit",!!(tg&&c.cur>=tg))}
+function renderChrono(){var el=document.getElementById("chr");if(!el||!G)return;var c=G.ch,tg=tSecs(EXI[G.ex].lv[G.lv-1]);
+ el.className="chrono"+(tg&&c.cur>=tg?" hit":"");
+ el.innerHTML='<div class="ch-l"><span>Cronómetro de aguante'+(tg?' · objetivo '+fmt(tg):'')+'</span><b id="chv">'+fmt1(c.cur)+'</b>'+(tg?'<div class="bar"><i id="chb" style="width:'+Math.min(100,c.cur/tg*100)+'%"></i></div>':'')+'<small>'+(c.holds.length?'Mejor: '+fmt1(c.best)+' · '+c.holds.length+' intento'+(c.holds.length>1?'s':''):'Púlsalo cuando empiece a aguantar y páralo cuando se mueva.')+'</small></div><button class="ch-b'+(c.run?' on':'')+'" data-a="chrono">'+(c.run?'Parar':'Iniciar')+'</button>'}
+function renderPyrLive(){var el=document.getElementById("pyrlive");if(el)el.innerHTML=pyr(EXI[G.ex],G.pyr==null?0:G.pyr,G.log)}
+function failSummary(e,log){var f={},tot=0;log.forEach(function(x){if(x[0]===0){tot++;var k=e.pyr&&x[1]!=null?e.pyr[x[1]][0]+' · '+e.pyr[x[1]][1]:'Paso '+(x[2]+1);f[k]=(f[k]||0)+1}});return {tot:tot,list:Object.keys(f).map(function(k){return [k,f[k]]}).sort(function(a,b){return b[1]-a[1]})}}
+function renderTimer(){
+ var el=document.getElementById("tmr");if(!el||!G)return;
+ var C=2*Math.PI*46,p=G.left/G.total;
+ el.innerHTML='<svg viewBox="0 0 110 110"><circle cx="55" cy="55" r="46" fill="none" stroke="#EEEDF5" stroke-width="9"/><circle cx="55" cy="55" r="46" fill="none" stroke="'+TYPES[EXI[G.ex].ty].c+'" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-p))+'" transform="rotate(-90 55 55)"/><text x="55" y="63" text-anchor="middle" class="tt">'+fmt(G.left)+'</text></svg><button data-a="timer">'+(G.run?"Pausar":G.left<G.total?"Seguir":"Iniciar")+'</button>';
+}
+function renderG(){
+ var e=EXI[G.ex],O=document.getElementById("overlay"),h;
+ if(G.phase==="steps"){
+  var last=G.step===e.s.length-1,pr="";for(var i=0;i<e.s.length;i++)pr+='<i class="'+(i<=G.step?"on":"")+'"></i>';
+  h='<div class="guide" style="'+cvE(e)+'"><div class="g-in"><div class="g-head"><button class="x" data-a="close">×</button>'+(Q?'<span class="qtag">'+(Q.i+1)+'/'+Q.list.length+'</span>':'')+'<b>'+dog(e.n)+'</b><span class="badge" style="background:var(--t);color:var(--c)">'+TYPES[e.ty].n+'</span></div><div class="prog">'+pr+'</div><div class="lvgoal"><span>Nivel '+G.lv+' · objetivo</span><b>'+dog(e.lv[G.lv-1])+'</b></div><div class="stepcard"><span class="sn">Paso '+(G.step+1)+' de '+e.s.length+'</span><p>'+dog(e.s[G.step])+'</p></div>'+(e.pyr?'<div class="h4" style="margin-top:16px">Pirámide · toca la repetición que estás haciendo</div>'+'<div id="pyrlive">'+pyr(e,G.pyr==null?0:G.pyr,G.log)+'</div>':'')+'<div class="nav"><button data-a="prev"'+(G.step===0?" disabled":"")+'>Anterior</button><button class="pri" data-a="next">'+(last?"Terminar sesión":"Siguiente")+'</button></div><div class="chrono" id="chr"></div><div class="tools"><div class="timer" id="tmr"></div><div class="clk"><button class="clicker voz" id="clicker" data-a="click">'+"MUY<br>BIEN"+'</button><div class="cnt" id="rw">'+accTxt()+'</div><div class="mk"><button class="nob" data-a="miss">No</button></div><small>Espacio = acierto · N = no</small></div></div>'+(e.v?'<a class="vid" style="margin-top:14px;display:inline-block" href="'+e.v+'" target="_blank" rel="noopener">▶ Ver vídeo de la educadora</a>':'')+'<div class="note-b n-tip g-tip"><b>Consejo</b>'+dog(e.tip)+'</div></div></div>';
+  O.innerHTML=h;renderTimer();renderChrono();
+ }else if(G.phase==="rate"){
+  var secs=Math.round(G.elapsed);
+  h='<div class="guide" style="'+cvE(e)+'"><div class="g-in"><div class="g-head"><button class="x" data-a="close">×</button><b>'+dog(e.n)+'</b></div><div class="celebrate" style="margin-top:22px"><h3>¡Sesión terminada!</h3><p>¿Cómo le ha ido a '+esc(state.dog)+'?</p></div><div class="rategrid">';
+  [1,2,3].forEach(function(k){var r=RATES[k];h+='<button class="rt'+(G.rating===k?" on":"")+'" data-a="rate" data-v="'+k+'"><span class="face" style="background:'+r.t+'"><svg viewBox="0 0 24 24" style="stroke:'+r.c+'">'+r.f+'</svg></span>'+r.l+'</button>'});
+  h+='</div><div class="sum">'+(G.ch.best?'<div class="fact"><small>Mejor aguante</small><b>'+fmt1(G.ch.best)+'</b></div>':'')+'<div class="fact"><small>Tiempo</small><b>'+(secs>0?fmt(secs):"—")+'</b></div><div class="fact"><small>Aciertos</small><b>'+G.rewards+(G.miss?' / '+(G.rewards+G.miss)+' · '+Math.round(G.rewards/(G.rewards+G.miss)*100)+'%':'')+'</b></div></div>'+((G.rewards+G.miss)>=5&&G.rewards/(G.rewards+G.miss)>=0.8?'<div class="note-b n-ok" style="margin-top:10px"><b>Regla del 80 %</b>¡'+G.rewards+' de '+(G.rewards+G.miss)+'! '+esc(state.dog)+' está lista para subir de nivel.</div>':'')+'<div class="h4">Dónde ha fallado</div>'+failBlock(e,G.log)+'<div class="h4">Notas (opcional)</div><textarea class="notes" id="gnote" placeholder="Qué funcionó, en qué se distrajo, qué premio usaste…">'+esc(G.note)+'</textarea><button class="okt'+(G.ok?" on":"")+'" data-a="okt"><span>'+(G.ok?'✓':'')+'</span><div><b>Ha cumplido el objetivo del nivel '+G.lv+'</b>'+dog(e.lv[G.lv-1])+'</div></button><div class="finish"><button class="big" data-a="savesess"'+(G.rating?"":' disabled style="opacity:.4"')+'>'+(Q&&Q.i+1<Q.list.length?'Guardar y siguiente ejercicio':'Guardar sesión')+'</button>'+(Q&&Q.i+1<Q.list.length?'<p class="sub" style="text-align:center;margin:8px 0 0">Antes del siguiente: 1 min de juego o descanso.</p>':'')+'<div class="nav"><button data-a="back">Volver a los pasos</button></div></div></div></div>';
+  O.innerHTML=h;
+ }
+}
+function failBlock(e,log){var f=failSummary(e,log);if(!f.tot)return '<p class="sub" style="margin:0">Sin fallos marcados con «No».</p>';return '<div class="fails">'+f.list.map(function(x){return '<span class="fl"><b>'+dog(x[0])+'</b> ✗'+x[1]+'</span>'}).join("")+'</div>'+(f.list[0][1]>=2?'<div class="note-b n-tip" style="margin-top:8px"><b>Sugerencia</b>Donde más falla es «'+dog(f.list[0][0])+'». Haz esa parte más fácil la próxima vez y vuelve a subir poco a poco.</div>':'')}
+function saveSession(){
+ var e=EXI[G.ex],before=lvDone(G.ex),gb=gLevel(),gdb=gDone();
+ var n=document.getElementById("gnote");if(n)G.note=n.value.trim().slice(0,300);
+ var secs=Math.round(G.elapsed);if(secs<30)secs=e.m*60;
+ state.sessions.push({id:Date.now().toString(36),t:new Date().toISOString(),ex:G.ex,lv:G.lv,ok:G.ok,rating:G.rating,rewards:G.rewards,miss:G.miss,log:G.log,hold:Math.round(G.ch.best),secs:secs,note:G.note});
+ var after=lvDone(G.ex),ga=gLevel(),wasOk=G.ok;
+ var nxt=Q&&Q.i+1<Q.list.length?Q.list[Q.i+1]:null;
+ if(nxt){Q.i++;stopTimer();render();start(nxt);save(("Siguiente: "+EXI[nxt].n).replace("{dog}",state.dog));return}
+ Q=null;closeO();render();autoBackup();
+ save((ga>gb||(!gdb&&gDone()))?"¡"+state.dog+" sube al nivel "+ga+"!":after>before?"Nivel "+after+" superado en «"+e.n.replace("{dog}",state.dog)+"»":wasOk?"Sesión guardada · objetivo cumplido":"Sesión guardada");
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click",function(ev){
+ var b=ev.target.closest("[data-a]");if(!b)return;var a=b.getAttribute("data-a"),v=b.getAttribute("data-v"),id=b.getAttribute("data-id");
+ if(a==="tab"){view=v;location.hash=v;render();window.scrollTo({top:0})}
+ else if(a==="goal"){state.goal=v;render();save();var pl=document.getElementById("plan");if(pl)pl.scrollIntoView({behavior:"smooth",block:"start"})}
+ else if(a==="today")startQueue();
+ else if(a==="levels"){LVV=gLevel();levelsSheet()}
+ else if(a==="lvv"){LVV=+v;levelsSheet()}
+ else if(a==="wk"){state.weekly=Math.max(1,Math.min(14,state.weekly+(+v)));render();save()}
+ else if(a==="detail")detail(id);
+ else if(a==="start")start(id);
+ else if(a==="close")closeO();
+ else if(a==="lc"){libCat=v;render()}
+ else if(a==="editname"){editing=true;render()}
+ else if(a==="savename"){var n=document.getElementById("namein").value.trim();if(n)state.dog=n.slice(0,20);editing=false;render();save()}
+ else if(a==="prev"){if(G.step>0){G.step--;renderG()}}
+ else if(a==="next"){var e=EXI[G.ex];if(G.step<e.s.length-1){G.step++;renderG()}else{stopTimer();chStop(true);var tt=G.rewards+G.miss,tg=tSecs(e.lv[G.lv-1]);G.ok=(tt>=5&&G.rewards/tt>=0.8)||(!!tg&&G.ch.best>=tg);G.phase="rate";renderG()}}
+ else if(a==="back"){var nn=document.getElementById("gnote");if(nn)G.note=nn.value;G.phase="steps";renderG()}
+ else if(a==="click"){G.rewards++;G.log.push([1,G.pyr==null?(EXI[G.ex].pyr?0:null):G.pyr,G.step]);if(EXI[G.ex].pyr)renderPyrLive();var r=document.getElementById("rw");if(r)r.innerHTML=accTxt()}
+ else if(a==="okt"){var gn=document.getElementById("gnote");if(gn)G.note=gn.value;G.ok=!G.ok;renderG()}
+ else if(a==="bkdrive")driveBackup(false);
+ else if(a==="bkdl"){var fn="maya-entreno-"+dkey(today())+".json";if(DL)DL.save({filename:fn,data:bkData()}).catch(function(){toast("Descarga cancelada")});else{var u=URL.createObjectURL(new Blob([bkData()],{type:"application/json"}));var l=document.createElement("a");l.href=u;l.download=fn;document.body.appendChild(l);l.click();l.remove();setTimeout(function(){URL.revokeObjectURL(u)},2000);state.backup=state.backup||{};state.backup.last=dkey(today());save("Copia descargada")}}
+ else if(a==="bkok"){if(RST){var keep=state.backup;state=RST;state.backup=keep;RST=null;render();save("Copia restaurada")}}
+ else if(a==="bkno"){RST=null;render()}
+ else if(a==="pyr"){if(G){G.pyr=+v;renderG()}}
+ else if(a==="miss"){G.miss++;G.log.push([0,G.pyr==null?(EXI[G.ex].pyr?0:null):G.pyr,G.step]);if(EXI[G.ex].pyr)renderPyrLive();var r2=document.getElementById("rw");if(r2)r2.innerHTML=accTxt()}
+ else if(a==="marker"){state.marker=state.marker==="voz"?"clic":"voz";try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}renderG()}
+ else if(a==="rt"||a==="rtm"){var k=dkey(today());state.daily=state.daily||{};var rec=state.daily[k]||(state.daily[k]={});var it=ROUT.filter(function(x){return x.k===v})[0];if(it.check)rec[v]=rec[v]?0:1;else rec[v]=Math.max(0,(rec[v]||0)+(a==="rt"?1:-1));render();clearTimeout(window._rs);window._rs=setTimeout(function(){save()},2500)}
+ else if(a==="timer")toggleTimer();
+ else if(a==="chrono")chToggle();
+ else if(a==="rate"){var nt=document.getElementById("gnote");if(nt)G.note=nt.value;G.rating=+v;renderG()}
+ else if(a==="savesess"){if(G.rating)saveSession()}
+ else if(a==="del"){if(b.classList.contains("arm")){state.sessions=state.sessions.filter(function(s){return s.id!==id});render();save("Sesión borrada")}else{b.classList.add("arm");b.textContent="¿Seguro?";setTimeout(function(){b.classList.remove("arm");b.textContent="Borrar"},2500)}}
+});
+document.addEventListener("change",function(ev){if(ev.target.id==="bkin"&&ev.target.files[0]){var r=new FileReader();r.onload=function(){restore(r.result)};r.readAsText(ev.target.files[0])}});
+document.addEventListener("input",function(ev){if(ev.target.id==="q"){libQ=ev.target.value;document.getElementById("libgrid").innerHTML=libGrid()}});
+document.addEventListener("keydown",function(ev){
+ if(ev.target.id==="namein"&&ev.key==="Enter"){document.querySelector('[data-a="savename"]').click();return}
+ if(ev.key==="Escape"&&document.getElementById("overlay").classList.contains("on")){closeO();return}
+ if(G&&G.phase==="steps"&&ev.code==="Space"&&ev.target.tagName!=="TEXTAREA"&&ev.target.tagName!=="INPUT"){ev.preventDefault();var c=document.getElementById("clicker");if(c){c.classList.add("hit");setTimeout(function(){c.classList.remove("hit")},90);c.click()}}
+ if(G&&G.phase==="steps"&&(ev.key==="n"||ev.key==="N")&&ev.target.tagName!=="TEXTAREA"){var nb2=document.querySelector('[data-a="miss"]');if(nb2)nb2.click()}
+ if(G&&G.phase==="steps"&&ev.key==="ArrowRight"){var nb=document.querySelector('[data-a="next"]');if(nb)nb.click()}
+ if(G&&G.phase==="steps"&&ev.key==="ArrowLeft"){var pb=document.querySelector('[data-a="prev"]');if(pb&&!pb.disabled)pb.click()}
+});
+window.addEventListener("hashchange",function(){var h=location.hash.slice(1);if(["hoy","ejercicios","progreso"].indexOf(h)>=0&&h!==view){view=h;render()}});
+render();
+})();
+</script></body></html>
