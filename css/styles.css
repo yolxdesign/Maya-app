@@ -99,9 +99,6 @@ svg.icon { width: 22px; height: 22px; fill: none; stroke: var(--c); stroke-width
 .badge-ok { background: var(--ok-tint); color: var(--ok); }
 .badge-warn { background: var(--warn-tint); color: var(--warn); }
 .badge-type { background: var(--t); color: var(--ci); }
-.dots { display: inline-flex; gap: 3px; vertical-align: middle; }
-.dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
-.dots i.on { background: var(--c); }
 .bar { height: 6px; border-radius: 9px; background: var(--line); overflow: hidden; }
 .bar > i { display: block; height: 100%; border-radius: 9px; background: var(--c); transition: width .3s; }
 .tile { width: 48px; height: 48px; border-radius: 15px; background: var(--t); display: grid; place-items: center; flex: none; }
@@ -162,9 +159,8 @@ svg.icon { width: 22px; height: 22px; fill: none; stroke: var(--c); stroke-width
 .info-btn { width: 34px; height: 34px; align-self: center; flex: none; border-radius: 50%; background: #fff; box-shadow: var(--shadow); color: var(--ci); font-weight: 900; font-style: italic; font-family: Georgia, serif; }
 .ex-row .num { position: absolute; top: -6px; left: -6px; width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 11px; font-weight: 900; display: grid; place-items: center; }
 .ex-row .body b { font-weight: 900; font-size: 15px; }
-.ex-row .name-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .ex-row .meta { margin-top: 6px; }
-.ex-row .goal-line { font-size: 12px; color: var(--ink-2); font-weight: 700; margin-top: 4px; }
+.ex-row .goal-line { font-size: 13px; color: var(--ink-2); margin-top: 2px; }
 .ex-row .bar { margin-top: 8px; height: 5px; }
 .code-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 13px; border-bottom: 1px dashed var(--line); }
 .code-row:last-child { border-bottom: 0; }
@@ -187,7 +183,7 @@ svg.icon { width: 22px; height: 22px; fill: none; stroke: var(--c); stroke-width
 .ex-card:hover { transform: translateY(-2px); }
 .ex-card .extra { font-size: 12px; font-weight: 800; color: var(--ci); }
 .ex-card b { display: block; font-size: 16px; font-weight: 900; }
-.ex-card .bar { margin-top: 10px; height: 5px; }
+.ex-card .summary { margin-top: 4px; font-size: 13px; color: var(--ink-2); }
 
 /* ---------- Progreso ---------- */
 .track { padding: 16px 18px; margin-bottom: 18px; }

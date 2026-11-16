@@ -69,7 +69,8 @@ for (const [label, options] of [["Móvil (iPhone 13)", devices["iPhone 13"]], ["
   await page.waitForSelector(".hero");
   check("La app arranca y muestra a Maya", (await page.textContent(".dog-name")) === "Maya");
   check("La cabecera solo muestra el nombre", !(await page.$(".level-pill")) && !(await page.$(".stat")));
-  check("Cada ejercicio del plan muestra su nivel", (await page.$$("#plan .level-track")).length > 0 && (await page.textContent("#plan .goal-line")).includes("Nivel 1"));
+  check("Cada ejercicio del plan muestra su nivel", (await page.$$("#plan .level-track")).length > 0 && (await page.textContent("#plan .goal-line")).length > 10);
+  check("El plan dice cuántas veces se ha practicado", (await page.textContent("#plan .meta")).includes("Sin practicar"));
 
   // Rutina diaria
   await page.click('[data-action="routine-step"][data-value="olfato"][data-step="1"]');

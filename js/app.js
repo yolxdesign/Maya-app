@@ -299,7 +299,6 @@
   const icon = (name) => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${ICON_PATHS[name]}</svg>`;
   const typeIcon = (e) => icon(TYPES[e.type].icon);
   const PAW = '<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="6" cy="9.5" rx="2" ry="2.6"/><ellipse cx="10" cy="5.8" rx="2" ry="2.6"/><ellipse cx="14.5" cy="5.8" rx="2" ry="2.6"/><ellipse cx="18.5" cy="9.5" rx="2" ry="2.6"/><path d="M12.2 11c2.6 0 5.6 3.6 5.6 6.2 0 2-1.6 2.8-3 2.8-1.1 0-1.7-.6-2.6-.6s-1.5.6-2.6.6c-1.4 0-3-.8-3-2.8 0-2.6 3-6.2 5.6-6.2z"/></svg>';
-  const dots = (n) => `<span class="dots" aria-label="Dificultad: ${DIFFICULTY[n]}">${[1, 2, 3].map((i) => `<i class="${i <= n ? "on" : ""}"></i>`).join("")}</span>`;
   const bar = (pct) => `<div class="bar"><i style="width:${pct}%"></i></div>`;
 
   /* =========================================================
@@ -393,24 +392,22 @@
 
   /** Fila del plan: tocarla empieza el ejercicio; el botón «i» abre la ficha. */
   function renderPlanRow(e, index) {
-    const level = currentLevel(e);
-    const line = isFinished(e) ? "Los 3 niveles superados"
-      : isWaiting(e) ? `Nivel ${levelsDone(e.id)} superado · el siguiente se abre cuando todos lo superen`
-      : `<b>Nivel ${level}:</b> ${txt(e.levels[level - 1].goal)}`;
-    const sessions = isFinished(e) || isWaiting(e) ? "" : `${passedCount(e.id, level)} de ${SESSIONS_TO_PASS} sesiones`;
+    const times = sessionsOf(e.id).length;
+    const practiced = times ? `Practicado ${times} ${times === 1 ? "vez" : "veces"}` : "Sin practicar";
     return `<article class="ex-row" style="${typeVars(e.type)}">
       <button class="row-main" data-action="start" data-value="${e.id}" aria-label="Empezar ${txt(e.name)}">
         <div class="tile"><span class="num" aria-hidden="true">${index + 1}</span>${typeIcon(e)}</div>
         <div class="body">
-          <div class="name-line"><b>${txt(e.name)}</b>${dots(e.difficulty)}</div>
-          <div class="meta">${levelTrack(e)}<span>${sessions}</span>${e.missingInfo ? '<span class="badge badge-warn">Falta info</span>' : ""}</div>
-          <div class="goal-line">${line}</div>
+          <b>${txt(e.name)}</b>
+          <div class="goal-line">${txt(e.summary)}</div>
+          <div class="meta">${levelTrack(e)}<span>${practiced}</span>${e.missingInfo ? '<span class="badge badge-warn">Falta info</span>' : ""}</div>
         </div>
         <span class="play" aria-hidden="true">▶</span>
       </button>
       <button class="info-btn" data-action="detail" data-value="${e.id}" aria-label="Ver ficha de ${txt(e.name)}">i</button>
     </article>`;
   }
+
 
 
 
@@ -442,7 +439,7 @@
     return `<button class="ex-card" style="${typeVars(e.type)}" data-action="detail" data-value="${e.id}">
       ${e.program ? "" : '<span class="extra">Extra · no cuenta para el nivel</span>'}
       <b>${txt(e.name)}</b>
-      <div class="meta">${dots(e.difficulty)}<span>${DIFFICULTY[e.difficulty]} · ${e.minutes} min</span></div>
+      <p class="summary">${txt(e.summary)}</p>
       <div class="meta">${levelTrack(e)}<span>${isFinished(e) ? "Completado" : isWaiting(e) ? "Espera al resto" : `Nivel ${currentLevel(e)}`}</span></div>
     </button>`;
   }
