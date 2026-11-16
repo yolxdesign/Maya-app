@@ -203,7 +203,6 @@
     return clamp(Math.min(...pending), 1, 3);
   }
   const programComplete = () => programExercises().every((e) => levelsDone(e.id) >= 3);
-  const passedAtGlobal = () => programExercises().filter((e) => levelsDone(e.id) >= globalLevel()).length;
   const mastery = (id) => percent(levelsDone(id), 3);
   const lastPracticed = (id) => Math.max(0, ...sessionsOf(id).map((s) => new Date(s.t).getTime()));
 
@@ -255,10 +254,7 @@
     state.sessions.forEach((s) => { const k = dayKey(new Date(s.t)); days[k] = (days[k] || 0) + 1; });
     return days;
   }
-  function daysThisWeek() {
-    const from = weekStart(today()).getTime();
-    return new Set(state.sessions.filter((s) => new Date(s.t).getTime() >= from).map((s) => dayKey(new Date(s.t)))).size;
-  }
+
   function bestStreak() {
     let best = 0;
     let run = 0;
@@ -280,7 +276,7 @@
       if (hit) return;
       total++;
       const key = e.pyramid && rep != null && e.pyramid[rep]
-        ? `${e.pyramid[rep].label} · ${e.pyramid[rep].level}` : `Paso ${step + 1}`;
+        ? `Repetición ${repLabel(e.pyramid[rep].label)} (${e.pyramid[rep].level.toLowerCase()})` : `Paso ${step + 1}`;
       counts[key] = (counts[key] || 0) + 1;
     });
     return { total, list: Object.entries(counts).sort((a, b) => b[1] - a[1]) };
@@ -319,22 +315,12 @@
   }
 
   function renderHeader() {
-    const level = globalLevel();
-    const passed = passedAtGlobal();
-    const total = programExercises().length;
-    return `<header class="hero"><div class="wrap">
-      <div class="hero-top">
-        <div class="avatar">${PAW}</div>
-        <div><div class="hello">Entrenando con</div><h1 class="dog-name">${esc(state.dog)}</h1></div>
-        <div class="level">
-          <span class="level-pill">${programComplete() ? "Programa completado" : `Nivel ${level} de 3`}</span>
-          <div class="level-bar"><i style="width:${percent(passed, total)}%"></i></div>
-          <div class="level-text">${passed} / ${total} ejercicios superados</div>
-        </div>
-      </div>
-      <div class="stat"><b>${daysThisWeek()}/${state.weekly}</b><span>días entrenados esta semana</span></div>
-    </div></header>`;
+    return `<header class="hero"><div class="wrap"><div class="hero-top">
+      <div class="avatar">${PAW}</div>
+      <div><div class="hello">Entrenando con</div><h1 class="dog-name">${esc(state.dog)}</h1></div>
+    </div></div></header>`;
   }
+
 
   function renderTabs() {
     const names = { hoy: "Hoy", ejercicios: "Ejercicios", progreso: "Progreso" };
@@ -397,21 +383,36 @@
       <div class="plan">${rows}</div></section>`;
   }
 
+  /** Los 3 niveles de un ejercicio: hechos ✓, el actual destacado y los bloqueados con candado. */
+  function levelTrack(e, size) {
+    const done = levelsDone(e.id);
+    const current = isFinished(e) ? 0 : currentLevel(e);
+    const steps = [1, 2, 3].map((n) => {
+      const kind = n <= done ? "done" : n === current && !isWaiting(e) ? "now" : "next";
+      const mark = n <= done ? "✓" : n;
+      return `<li class="lt-${kind}"${kind === "now" ? ' aria-current="step"' : ""}><span>${mark}</span>${size === "big" ? `<small>Nivel ${n}</small>` : ""}</li>`;
+    }).join("");
+    const label = isFinished(e) ? "Los 3 niveles superados" : isWaiting(e) ? `Nivel ${done} superado` : `Nivel ${current} de 3`;
+    return `<ol class="level-track${size === "big" ? " is-big" : ""}" aria-label="${label}">${steps}</ol>`;
+  }
+
   function renderPlanRow(e, index) {
-    const status = statusOf(e);
+    const level = currentLevel(e);
     const line = isFinished(e) ? "Los 3 niveles superados"
-      : isWaiting(e) ? `Superado · el nivel ${globalLevel() + 1} se desbloquea cuando todos lo superen`
-      : `Objetivo: ${txt(e.levels[currentLevel(e) - 1].goal)}`;
+      : isWaiting(e) ? `Nivel ${levelsDone(e.id)} superado · el siguiente se abre cuando todos lo superen`
+      : `<b>Nivel ${level}:</b> ${txt(e.levels[level - 1].goal)}`;
+    const sessions = isFinished(e) || isWaiting(e) ? "" : ` · ${passedCount(e.id, level)} de ${SESSIONS_TO_PASS} sesiones`;
     return `<article class="ex-row" style="${typeVars(e.type)}">
       <div class="tile"><span class="num" aria-hidden="true">${index + 1}</span>${typeIcon(e)}</div>
       <button class="body" data-action="detail" data-value="${e.id}">
-        <b>${txt(e.name)}</b>
-        <div class="meta">${dots(e.difficulty)}<span class="badge ${status.cls}">${status.text}</span>${e.missingInfo ? '<span class="badge badge-warn">Falta info</span>' : ""}</div>
-        <div class="goal-line">${line}</div>${bar(mastery(e.id))}
+        <div class="name-line"><b>${txt(e.name)}</b>${dots(e.difficulty)}</div>
+        <div class="meta">${levelTrack(e)}<span>${sessions.replace(" · ", "")}</span>${e.missingInfo ? '<span class="badge badge-warn">Falta info</span>' : ""}</div>
+        <div class="goal-line">${line}</div>
       </button>
       <button class="btn" data-action="start" data-value="${e.id}">Empezar</button>
     </article>`;
   }
+
 
   function renderCode() {
     return `<div class="card card-pad"><h2 class="card-title">Código de comunicación</h2>${DATA.code.map((c, i) => {
@@ -438,14 +439,14 @@
   }
 
   function renderCard(e) {
-    const status = statusOf(e);
     return `<button class="ex-card" style="${typeVars(e.type)}" data-action="detail" data-value="${e.id}">
       ${e.program ? "" : '<span class="extra">Extra · no cuenta para el nivel</span>'}
       <b>${txt(e.name)}</b>
       <div class="meta">${dots(e.difficulty)}<span>${DIFFICULTY[e.difficulty]} · ${e.minutes} min</span></div>
-      <div class="meta"><span class="badge ${status.cls}">${status.text}</span></div>${bar(mastery(e.id))}
+      <div class="meta">${levelTrack(e)}<span>${isFinished(e) ? "Completado" : isWaiting(e) ? "Espera al resto" : `Nivel ${currentLevel(e)}`}</span></div>
     </button>`;
   }
+
 
   /* ---------- Progreso ---------- */
   function renderProgress() {
@@ -574,14 +575,24 @@
     return `<div class="levels">${e.levels.map((lvl, i) => {
       const n = i + 1;
       const locked = e.program && n > global && n > done;
-      const cls = n <= done ? "is-done" : locked ? "is-locked" : n === current ? "is-current" : "";
+      const now = n === current && n > done && !isWaiting(e);
+      const cls = n <= done ? "is-done" : locked ? "is-locked" : now ? "is-current" : "";
       const mark = n <= done ? "✓" : locked ? "🔒" : n;
-      const extra = n === current && n > done ? ` · ${passedCount(e.id, n)}/${SESSIONS_TO_PASS} sesiones` : "";
+      const tag = n <= done ? "Superado" : now ? `Ahora · ${passedCount(e.id, n)} de ${SESSIONS_TO_PASS} sesiones` : locked ? "Bloqueado" : "";
       const time = lvl.time ? ` <span class="badge">${lvl.time.kind === "under" ? "máx." : "mín."} ${durationText(lvl.time.sec)}</span>` : "";
-      return `<div class="level-item ${cls}"><span aria-hidden="true">${mark}</span><div><b>Nivel ${n}${extra}</b>${txt(lvl.goal)}${time}</div></div>`;
+      return `<div class="level-item ${cls}"><span aria-hidden="true">${mark}</span><div><b>Nivel ${n}${tag ? ` · ${tag}` : ""}</b>${txt(lvl.goal)}${time}</div></div>`;
     }).join("")}</div>`;
   }
 
+
+  /** «R1», «P2», «E1 · R3» → «1ª rep.», «2ª rep.», «A · 3ª» */
+  function repLabel(label) {
+    const m = /^(?:E(\d)\s*·\s*)?[RP](\d)$/.exec(label);
+    if (!m) return label;
+    return m[1] ? `${"AB"[m[1] - 1] || m[1]} · ${m[2]}ª` : `${m[2]}ª rep.`;
+  }
+
+  /** Repeticiones de la sesión (pirámide fácil → difícil → fácil). No son niveles. */
   function renderPyramid(e, active, log) {
     return `<div class="pyramid">${e.pyramid.map((r, i) => {
       let yes = 0;
@@ -591,9 +602,10 @@
       const cls = `pyr${r.level === "Difícil" ? " is-hard" : ""}${i === active ? " is-active" : ""}${no ? " has-fails" : ""}`;
       const tag = log ? "button" : "div";
       const attrs = log ? ` data-action="pyramid" data-value="${i}" aria-pressed="${i === active}"` : "";
-      return `<${tag} class="${cls}"${attrs}><span>${esc(r.label)}</span><b>${esc(r.level)}</b><em>${txt(r.detail)}</em>${counts}</${tag}>`;
+      return `<${tag} class="${cls}"${attrs}><span>${esc(repLabel(r.label))}</span><b>${esc(r.level)}</b><em>${txt(r.detail)}</em>${counts}</${tag}>`;
     }).join("")}</div>`;
   }
+
 
   function renderFails(e, log) {
     const f = failSummary(e, log);
@@ -613,12 +625,13 @@
       <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" style="${typeVars(e.type)}">
         <div class="sheet-head">${closeButton}<div class="tile">${typeIcon(e)}</div>
           <span class="kicker">${esc(t.name)}${e.program ? "" : " · Extra"}</span><h2 id="sheet-title">${txt(e.name)}</h2>
+          <div style="margin-top:12px">${levelTrack(e, "big")}</div>
           ${e.video ? `<a class="video" href="${esc(e.video)}" target="_blank" rel="noopener">▶ Ver vídeo de la educadora</a>` : ""}</div>
         <div class="sheet-body">
           <div class="facts">
             <div class="fact"><small>Dificultad</small><b>${DIFFICULTY[e.difficulty]}</b></div>
             <div class="fact"><small>Duración</small><b>${e.minutes} min</b></div>
-            <div class="fact"><small>Estado</small><b>${statusOf(e).text}</b></div>
+            <div class="fact"><small>Toca</small><b>${isFinished(e) ? "Completado" : isWaiting(e) ? "Espera al resto" : `Nivel ${currentLevel(e)}`}</b></div>
           </div>
           <div class="fact"><small>Material</small><b>${txt(e.material)}</b></div>
           <h3 class="h3">Niveles</h3>${renderLevels(e)}
@@ -629,7 +642,7 @@
             <div class="note note-ok"><b>Lo tiene cuando…</b>${txt(e.mastered)}</div>
             ${e.missingInfo ? `<div class="note note-gap"><b>Falta confirmar con la educadora</b>${txt(e.missingInfo)}</div>` : ""}
           </div>
-          ${e.pyramid ? `<h3 class="h3">Desglose piramidal</h3>${renderPyramid(e, -1)}` : ""}
+          ${e.pyramid ? `<h3 class="h3">Repeticiones de cada sesión</h3><p class="lead" style="margin:-4px 0 8px">Dentro de cada sesión: fácil → difícil → fácil. No son niveles.</p>${renderPyramid(e, -1)}` : ""}
           ${recent.length ? `<h3 class="h3">Dónde falla · últimas ${recent.length} sesiones</h3>${renderFails(e, recentLog)}` : ""}
           ${best ? `<p class="lead" style="margin-top:8px">Mejor tiempo registrado: <b>${clock(best, true)}</b></p>` : ""}
         </div>
@@ -685,7 +698,7 @@
     stopGuideTimers();
     guide = {
       id, level: currentLevel(e), phase: "steps", step: 0, rep: e.pyramid ? 0 : null,
-      hits: 0, misses: 0, log: [], rating: 0, metManual: null, note: "",
+      hits: 0, misses: 0, log: [], rating: 0, metManual: null, note: "", tipOpen: true,
       timer: { total: e.minutes * 60, left: e.minutes * 60, running: false, handle: 0, used: 0 },
       chrono: { running: false, start: 0, current: 0, attempts: [], handle: 0, alerted: false },
     };
@@ -725,7 +738,7 @@
   function renderGuide() {
     const e = BY_ID[guide.id];
     const header = `<div class="guide-head">${closeButton}${queue ? `<span class="queue-tag">${queue.index + 1}/${queue.ids.length}</span>` : ""}
-      <h2 id="guide-title">${txt(e.name)}</h2><span class="badge badge-type">${esc(TYPES[e.type].name)}</span></div>`;
+      <h2 id="guide-title">${txt(e.name)}</h2></div>`;
     const body = guide.phase === "steps" ? renderSteps(e) : renderRating(e);
     openOverlay(`<div class="guide" role="dialog" aria-modal="true" aria-labelledby="guide-title" style="${typeVars(e.type)}">
       <div class="guide-in">${header}${body}</div></div>`, txt(e.name));
@@ -735,32 +748,39 @@
   function renderSteps(e) {
     const last = guide.step === e.steps.length - 1;
     const time = levelTime();
-    return `<div class="progress" aria-hidden="true">${e.steps.map((_, i) => `<i class="${i <= guide.step ? "on" : ""}"></i>`).join("")}</div>
-      <div class="goal-box"><span>Nivel ${guide.level} · objetivo</span><b>${txt(e.levels[guide.level - 1].goal)}</b></div>
+    return `<section class="level-panel" aria-label="Nivel que estás entrenando">
+        <div class="level-panel-head"><span>Ahora entrenas</span><b>Nivel ${guide.level}</b>${levelTrack(e, "big")}</div>
+        <p><b>Objetivo:</b> ${txt(e.levels[guide.level - 1].goal)}</p>
+      </section>
+      <details class="tip-box"${guide.tipOpen ? " open" : ""}><summary>Consejo${e.video ? " y vídeo" : ""}</summary>
+        <p>${txt(e.tip)}</p>
+        ${e.video ? `<a class="video" href="${esc(e.video)}" target="_blank" rel="noopener">▶ Ver vídeo de la educadora</a>` : ""}
+      </details>
+      <div class="progress" aria-hidden="true">${e.steps.map((_, i) => `<i class="${i <= guide.step ? "on" : ""}"></i>`).join("")}</div>
       <div class="step-card" aria-live="polite"><span>Paso ${guide.step + 1} de ${e.steps.length}</span><p>${txt(e.steps[guide.step])}</p></div>
-      ${e.pyramid ? `<h3 class="h3">Pirámide · toca la repetición que estás haciendo</h3><div id="pyramid">${renderPyramid(e, guide.rep, guide.log)}</div>` : ""}
       <div class="nav"><button data-action="prev"${guide.step === 0 ? " disabled" : ""}>Anterior</button>
         <button class="primary" data-action="next">${last ? "Terminar sesión" : "Siguiente"}</button></div>
-      ${time ? `<div class="chrono" id="chrono"></div>` : ""}
-      <div class="tools">
-        <div class="tool" id="timer"></div>
-        <div class="tool">
-          <button class="marker" id="marker" data-action="hit" aria-label="Muy bien: marcar acierto">MUY<br>BIEN</button>
-          <div class="score" id="score" aria-live="polite">${scoreText()}</div>
-          <button class="no-btn" data-action="miss">No</button>
-          <small>Espacio = acierto · N = no</small>
+      <section class="counter-card" aria-label="Contador de aciertos">
+        <div class="score" id="score" aria-live="polite">${scoreText()}</div>
+        <div class="counter-buttons">
+          <button class="mark-btn is-yes" id="marker" data-action="hit"><b>✓</b>Bien</button>
+          <button class="mark-btn is-no" data-action="miss"><b>✗</b>Fallo</button>
         </div>
-      </div>
-      ${e.video ? `<a class="video" style="margin-top:14px;align-self:flex-start" href="${esc(e.video)}" target="_blank" rel="noopener">▶ Ver vídeo de la educadora</a>` : ""}
-      <div class="note note-tip" style="margin-top:14px"><b>Consejo</b>${txt(e.tip)}</div>`;
+        <button class="undo-btn" data-action="undo"${guide.log.length ? "" : " disabled"}>↶ Deshacer el último</button>
+      </section>
+      ${time ? `<div class="chrono" id="chrono"></div>` : ""}
+      ${e.pyramid ? `<h3 class="h3">Repeticiones · toca la que estás haciendo</h3><div id="pyramid">${renderPyramid(e, guide.rep, guide.log)}</div>` : ""}
+      <div class="timer-row" id="timer"></div>`;
   }
+
 
   function scoreText() {
     const total = guide.hits + guide.misses;
     const p = percent(guide.hits, total);
     const met = total >= MIN_REPS && p >= PASS_RATE * 100;
-    return `<b>${guide.hits}</b> aciertos · ${guide.misses} no${total ? ` · <span class="${met ? "met" : ""}">${p} %</span>` : ""}`;
+    return `<span class="y">✓ ${guide.hits}</span><span class="n">✗ ${guide.misses}</span>${total ? `<span class="${met ? "met" : ""}">${p} %${met ? " · objetivo" : ""}</span>` : '<span class="hint">Marca cada repetición</span>'}`;
   }
+
 
   function renderRating(e) {
     const total = guide.hits + guide.misses;
@@ -799,14 +819,10 @@
     const el = $("#timer");
     if (!el || !guide) return;
     const t = guide.timer;
-    const circ = 2 * Math.PI * 46;
-    el.innerHTML = `<svg class="ring" viewBox="0 0 110 110" role="img" aria-label="Tiempo restante ${clock(t.left)}">
-        <circle cx="55" cy="55" r="46" fill="none" stroke="#EEEDF5" stroke-width="9"/>
-        <circle cx="55" cy="55" r="46" fill="none" style="stroke:var(--c)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ * (1 - t.left / t.total)}" transform="rotate(-90 55 55)"/>
-        <text x="55" y="63" text-anchor="middle" font-size="24" font-weight="900" fill="#1E1B3A">${clock(t.left)}</text></svg>
-      <button class="btn btn-soft" data-action="timer">${t.running ? "Pausar" : t.left < t.total ? "Seguir" : "Iniciar"}</button>
-      <small>Duración de la sesión</small>`;
+    el.innerHTML = `<span>Tiempo de sesión</span><b>${clock(t.left)}</b>${bar(Math.round((t.left / t.total) * 100))}
+      <button class="btn btn-soft" data-action="timer">${t.running ? "Pausar" : t.left < t.total ? "Seguir" : "Iniciar"}</button>`;
   }
+
   function toggleTimer() {
     const t = guide.timer;
     if (t.running) { clearInterval(t.handle); t.running = false; paintTimer(); return; }
@@ -838,17 +854,13 @@
     const c = guide.chrono;
     const shown = c.running ? c.current : bestTime() || c.current;
     const met = timeMet(time, c.running ? (time.kind === "under" ? 0 : c.current) : bestTime());
-    const fill = time.kind === "under" ? clamp(c.current / time.sec, 0, 1) : clamp(shown / time.sec, 0, 1);
-    const verb = time.kind === "under" ? `máx. ${durationText(time.sec)}` : `mín. ${durationText(time.sec)}`;
-    const help = time.kind === "under"
-      ? "Inícialo al dar la señal y páralo cuando lo consiga."
-      : "Inícialo cuando empiece a aguantar y páralo cuando se mueva.";
+    const fill = clamp((c.running ? c.current : shown) / time.sec, 0, 1);
     el.classList.toggle("is-met", met);
-    el.innerHTML = `<div><span>Cronómetro · objetivo ${verb}</span><output>${clock(shown, true)}</output>
-        ${bar(Math.round(fill * 100))}
-        <small>${c.attempts.length ? `${time.kind === "under" ? "Mejor" : "Mejor aguante"}: ${clock(bestTime(), true)} · ${c.attempts.length} intento${c.attempts.length > 1 ? "s" : ""}` : help}</small></div>
+    el.innerHTML = `<div><span>Objetivo ${time.kind === "under" ? "≤" : "≥"} ${clock(time.sec)}</span><output>${clock(shown, true)}</output>
+        ${bar(Math.round(fill * 100))}${c.attempts.length ? `<small>Mejor: ${clock(bestTime(), true)}</small>` : ""}</div>
       <button class="chrono-btn${c.running ? " is-running" : ""}" data-action="chrono">${c.running ? "Parar" : "Iniciar"}</button>`;
   }
+
   function stopChrono(silent) {
     const c = guide.chrono;
     clearInterval(c.handle);
@@ -875,10 +887,24 @@
   function mark(hit) {
     if (hit) guide.hits++; else guide.misses++;
     guide.log.push([hit ? 1 : 0, guide.rep, guide.step]);
+    refreshCounter();
+  }
+
+  function undoMark() {
+    const last = guide.log.pop();
+    if (!last) return;
+    if (last[0]) guide.hits--; else guide.misses--;
+    refreshCounter();
+    toast(last[0] ? "Deshecho: un «Bien» menos" : "Deshecho: un «Fallo» menos");
+  }
+
+  function refreshCounter() {
     $("#score").innerHTML = scoreText();
+    $(".undo-btn").disabled = !guide.log.length;
     const pyramid = $("#pyramid");
     if (pyramid) pyramid.innerHTML = renderPyramid(BY_ID[guide.id], guide.rep, guide.log);
   }
+
 
   function saveSession() {
     const e = BY_ID[guide.id];
@@ -1085,6 +1111,7 @@
     back: () => { keepNote(); guide.phase = "steps"; renderGuide(); },
     hit: () => mark(true),
     miss: () => mark(false),
+    undo: () => undoMark(),
     pyramid: (v) => { guide.rep = +v; $("#pyramid").innerHTML = renderPyramid(BY_ID[guide.id], guide.rep, guide.log); },
     timer: () => toggleTimer(),
     chrono: () => toggleChrono(),
@@ -1116,6 +1143,10 @@
     if (run) run(el.dataset.value, el);
   });
 
+  document.addEventListener("toggle", (ev) => {
+    if (guide && ev.target.classList && ev.target.classList.contains("tip-box")) guide.tipOpen = ev.target.open;
+  }, true);
+
   document.addEventListener("change", (ev) => {
     if (ev.target.id === "restore-file" && ev.target.files[0]) readRestoreFile(ev.target.files[0]);
   });
@@ -1133,6 +1164,8 @@
       mark(true);
     } else if (ev.key === "n" || ev.key === "N") {
       mark(false);
+    } else if (ev.key === "z" || ev.key === "Z" || ev.key === "Backspace") {
+      undoMark();
     } else if (ev.key === "ArrowRight") {
       actions.next();
     } else if (ev.key === "ArrowLeft") {

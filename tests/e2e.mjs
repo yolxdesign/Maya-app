@@ -68,7 +68,8 @@ for (const [label, options] of [["Móvil (iPhone 13)", devices["iPhone 13"]], ["
   await page.goto(BASE);
   await page.waitForSelector(".hero");
   check("La app arranca y muestra a Maya", (await page.textContent(".dog-name")) === "Maya");
-  check("Empieza en el nivel 1", (await page.textContent(".level-pill")).includes("Nivel 1"));
+  check("La cabecera solo muestra el nombre", !(await page.$(".level-pill")) && !(await page.$(".stat")));
+  check("Cada ejercicio del plan muestra su nivel", (await page.$$("#plan .level-track")).length > 0 && (await page.textContent("#plan .goal-line")).includes("Nivel 1"));
 
   // Rutina diaria
   await page.click('[data-action="routine-step"][data-value="olfato"][data-step="1"]');
@@ -125,6 +126,14 @@ for (const [label, options] of [["Móvil (iPhone 13)", devices["iPhone 13"]], ["
   for (let i = 0; i < 4; i++) await page.click('[data-action="hit"]');
   await page.click('[data-action="miss"]');
   check("4 de 5 marca 80 %", (await page.textContent("#score")).includes("80 %"));
+  check("El modo guiado dice qué nivel se entrena", (await page.textContent(".level-panel")).includes("Nivel 1"));
+  check("El consejo aparece arriba, antes de los pasos", await page.evaluate(() => {
+    const tip = document.querySelector(".tip-box"); const step = document.querySelector(".step-card");
+    return !!tip && !!(tip.compareDocumentPosition(step) & Node.DOCUMENT_POSITION_FOLLOWING);
+  }));
+  await page.click('[data-action="hit"]');
+  await page.click('[data-action="undo"]');
+  check("Deshacer quita el último acierto", (await page.textContent("#score")).includes("✓ 4"));
   await finishSession(page);
   check("La regla del 80 % marca el objetivo cumplido", (await page.getAttribute(".met-toggle", "aria-pressed")) === "true");
   await page.click('[data-action="met"]');
@@ -145,7 +154,7 @@ for (const [label, options] of [["Móvil (iPhone 13)", devices["iPhone 13"]], ["
   await finishSession(page);
   await page.click('[data-action="save"]');
   await page.click('[data-action="detail"][data-value="sentadoneutra"]');
-  check("Con 2 sesiones cumplidas queda «espera al resto»", (await page.textContent(".sheet .facts")).includes("espera al resto"));
+  check("Con 2 sesiones cumplidas queda «espera al resto»", (await page.textContent(".sheet .facts")).toLowerCase().includes("espera al resto"));
   check("El nivel 2 sigue bloqueado", (await page.$$(".sheet .level-item.is-locked")).length === 2);
   await page.keyboard.press("Escape");
 
@@ -215,7 +224,9 @@ for (const [label, options] of [["Móvil (iPhone 13)", devices["iPhone 13"]], ["
   await page.keyboard.press("Space");
   await page.keyboard.press("Space");
   await page.keyboard.press("n");
-  check("Espacio y N marcan aciertos y fallos", (await page.textContent("#score")).includes("2</b>") || (await page.innerHTML("#score")).startsWith("<b>2</b>"));
+  check("Espacio y N marcan aciertos y fallos", (await page.textContent("#score")).includes("✓ 2") && (await page.textContent("#score")).includes("✗ 1"));
+  await page.keyboard.press("z");
+  check("Z deshace con el teclado", (await page.textContent("#score")).includes("✗ 0"));
   await page.keyboard.press("Escape");
 
   await page.screenshot({ path: join(ROOT, `tests/screens/${label.startsWith("M") ? "movil" : "escritorio"}.png`), fullPage: false });

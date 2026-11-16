@@ -2,7 +2,7 @@
    Estrategia: responde al instante con la copia guardada y la actualiza en segundo plano.
    Sube VERSION al publicar cambios para limpiar las copias antiguas. */
 "use strict";
-const VERSION = "maya-v3";
+const VERSION = "maya-v4";
 const APP_FILES = [
   "./", "index.html", "css/styles.css", "js/data.js", "js/app.js", "js/pwa.js",
   "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/icon-180.png",

@@ -78,15 +78,6 @@ svg.icon { width: 22px; height: 22px; fill: none; stroke: var(--c); stroke-width
 .avatar svg { width: 24px; height: 24px; fill: var(--brand); }
 .hello { font-size: 11px; font-weight: 700; opacity: .85; }
 .dog-name { font-size: 22px; font-weight: 900; line-height: 1.1; }
-.level { margin-left: auto; text-align: right; }
-.level-pill { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 900; font-size: 13px; padding: 6px 12px; border-radius: 99px; }
-.level-bar { width: 130px; height: 6px; border-radius: 9px; background: rgba(255, 255, 255, .25); margin: 8px 0 0 auto; overflow: hidden; }
-.level-bar > i { display: block; height: 100%; background: var(--gold); border-radius: 9px; }
-.level-text { font-size: 11px; font-weight: 700; opacity: .85; margin-top: 4px; }
-.stat { display: inline-flex; align-items: baseline; gap: 8px; margin-top: 10px; background: rgba(255, 255, 255, .14); border-radius: 18px; padding: 8px 14px; }
-.stat b { font-size: 18px; font-weight: 900; }
-.stat span { font-size: 12px; font-weight: 700; opacity: .9; }
-
 /* ---------- Pestañas ---------- */
 .tabs {
   position: sticky; top: 10px; z-index: 5;
@@ -179,6 +170,8 @@ svg.icon { width: 22px; height: 22px; fill: none; stroke: var(--c); stroke-width
 .ex-row .num { position: absolute; top: -6px; left: -6px; width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 11px; font-weight: 900; display: grid; place-items: center; }
 .ex-row .body { flex: 1; min-width: 0; text-align: left; }
 .ex-row .body b { font-weight: 900; font-size: 15px; }
+.ex-row .name-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ex-row .meta { margin-top: 6px; }
 .ex-row .goal-line { font-size: 12px; color: var(--ink-2); font-weight: 700; margin-top: 4px; }
 .ex-row .bar { margin-top: 8px; height: 5px; }
 .code-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 13px; border-bottom: 1px dashed var(--line); }
@@ -330,22 +323,6 @@ svg.icon { width: 22px; height: 22px; fill: none; stroke: var(--c); stroke-width
 .chrono small { font-size: 12px; color: var(--ink-3); font-weight: 700; }
 .chrono-btn { width: 84px; height: 84px; border-radius: 50%; flex: none; background: var(--ci); color: #fff; font-weight: 900; font-size: 15px; box-shadow: 0 6px 16px rgba(0, 0, 0, .15); }
 .chrono-btn.is-running { background: var(--ko); }
-.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
-.tool { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 16px; border-radius: 24px; background: #fff; box-shadow: var(--shadow); }
-.tool svg.ring { width: 110px; height: 110px; }
-.tool small { font-size: 11px; font-weight: 700; color: var(--ink-3); text-align: center; }
-.marker {
-  width: 110px; height: 110px; border-radius: 50%; display: grid; place-items: center;
-  font-size: 16px; font-weight: 900; line-height: 1.05; color: #5C3F00; text-align: center;
-  background: radial-gradient(circle at 35% 30%, #FFD66B, var(--gold) 55%, #F0A800);
-  box-shadow: 0 8px 0 #D69200, 0 12px 22px rgba(214, 146, 0, .35);
-  transition: transform .06s, box-shadow .06s; user-select: none; -webkit-tap-highlight-color: transparent;
-}
-.marker:active, .marker.is-hit { transform: translateY(6px); box-shadow: 0 2px 0 #D69200, 0 4px 10px rgba(214, 146, 0, .3); }
-.score { font-weight: 900; font-size: 13px; color: var(--ink-2); }
-.score b { font-size: 18px; color: var(--ink); }
-.score .met { color: var(--ok); }
-.no-btn { padding: 7px 16px; border-radius: 99px; background: var(--ko-tint); color: var(--ko); font-weight: 900; font-size: 13px; }
 .finish { margin-top: auto; padding-top: 20px; }
 .celebrate { margin-top: 22px; text-align: center; }
 .celebrate h3 { font-size: 26px; font-weight: 900; }
@@ -363,15 +340,54 @@ svg.icon { width: 22px; height: 22px; fill: none; stroke: var(--c); stroke-width
 .met-toggle[aria-pressed="true"] > span { background: var(--ok); border-color: var(--ok); }
 .notes-input { width: 100%; min-height: 90px; margin-top: 8px; padding: 14px; border: 0; border-radius: 16px; box-shadow: var(--shadow); resize: vertical; }
 
+
+/* ---------- Niveles de un ejercicio (①②③) ---------- */
+.level-track { display: inline-flex; align-items: center; gap: 0; list-style: none; }
+.level-track li { display: flex; flex-direction: column; align-items: center; gap: 2px; position: relative; }
+.level-track li + li { margin-left: 14px; }
+.level-track li + li::before { content: ""; position: absolute; top: 9px; right: 100%; width: 14px; height: 2px; background: var(--line); }
+.level-track li.lt-done + li::before { background: var(--ok); }
+.level-track span { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 900; background: var(--muted); color: var(--ink-3); border: 2px solid transparent; }
+.level-track .lt-done span { background: var(--ok); color: #fff; }
+.level-track .lt-now span { background: #fff; color: var(--ci); border-color: var(--ci); }
+.level-track small { font-size: 10px; font-weight: 800; color: var(--ink-3); }
+.level-track .lt-now small { color: var(--ci); }
+.level-track.is-big li + li { margin-left: 26px; }
+.level-track.is-big li + li::before { top: 14px; width: 26px; }
+.level-track.is-big span { width: 30px; height: 30px; font-size: 14px; }
+
+/* ---------- Modo guiado: nivel, consejo, contador ---------- */
+.level-panel { padding: 14px 16px; margin: 16px 0 12px; border-radius: 20px; background: var(--t); border: 2px solid var(--ci); }
+.level-panel-head { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; }
+.level-panel-head > span { width: 100%; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; color: var(--ci); }
+.level-panel-head > b { font-size: 26px; font-weight: 900; color: var(--ci); line-height: 1; margin-right: auto; }
+.level-panel p { margin-top: 10px; font-size: 15px; }
+.tip-box { margin-bottom: 14px; padding: 12px 16px; border-radius: 18px; background: var(--warn-tint); color: #5C4A14; }
+.tip-box summary { cursor: pointer; font-weight: 900; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+.tip-box p { margin-top: 6px; font-size: 14px; }
+.tip-box .video { margin-top: 8px; }
+.counter-card { margin-top: 14px; padding: 16px; border-radius: 22px; background: #fff; box-shadow: var(--shadow); }
+.score { display: flex; justify-content: center; gap: 14px; font-weight: 900; font-size: 18px; margin-bottom: 12px; }
+.score .y { color: var(--ok); }
+.score .n { color: var(--ko); }
+.score .met { color: var(--ok); }
+.score .hint { font-size: 13px; color: var(--ink-3); font-weight: 700; align-self: center; }
+.counter-buttons { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
+.mark-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 92px; border-radius: 20px; font-weight: 900; font-size: 16px; -webkit-tap-highlight-color: transparent; transition: transform .06s; user-select: none; }
+.mark-btn b { font-size: 30px; line-height: 1; }
+.mark-btn:active, .mark-btn.is-hit { transform: scale(.96); }
+.mark-btn.is-yes { background: var(--ok); color: #fff; box-shadow: 0 6px 16px rgba(13, 122, 92, .3); }
+.mark-btn.is-no { background: var(--ko-tint); color: var(--ko); }
+.undo-btn { display: block; margin: 10px auto 0; padding: 8px 14px; border-radius: 99px; font-weight: 800; font-size: 13px; color: var(--ink-2); background: var(--muted); }
+.timer-row { display: grid; grid-template-columns: auto auto 1fr auto; align-items: center; gap: 12px; margin-top: 14px; padding: 12px 16px; border-radius: 18px; background: #fff; box-shadow: var(--shadow); }
+.timer-row > span { font-size: 12px; font-weight: 800; color: var(--ink-2); }
+.timer-row > b { font-size: 18px; font-weight: 900; font-variant-numeric: tabular-nums; }
+
 /* ---------- Móvil ---------- */
 @media (max-width: 700px) {
   body { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
   .wrap { padding: 0 16px; }
   .hero { padding-bottom: 22px; border-radius: 0 0 26px 26px; }
-  .hero-top { flex-wrap: wrap; }
-  .level { display: flex; align-items: center; gap: 10px; width: 100%; margin-left: 0; text-align: left; }
-  .level-bar { flex: 1; margin: 0; }
-  .level-text { margin: 0; }
   .tabs {
     position: fixed; top: auto; bottom: 0; left: 0; right: 0; z-index: 40;
     width: 100%; margin: 0; justify-content: space-around; border-radius: 22px 22px 0 0;
