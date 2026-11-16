@@ -83,6 +83,14 @@ for (const [label, options] of [["Móvil (iPhone 13)", devices["iPhone 13"]], ["
   await page.click('[data-action="goal"][data-value="trucos"]');
   check("Elegir un tipo cambia el plan", (await page.textContent("#plan h2")).includes("Trucos"));
 
+  // Tocar la fila del plan empieza el ejercicio; «i» abre la ficha
+  await page.click("#plan .row-main");
+  check("Tocar una fila del plan abre el modo guiado", await page.isVisible(".guide"));
+  await page.keyboard.press("Escape");
+  await page.click("#plan .info-btn");
+  check("El botón «i» abre la ficha", await page.isVisible(".sheet"));
+  await page.keyboard.press("Escape");
+
   // Ficha de ejercicio y bloqueo del fondo
   await page.click('[data-action="view"][data-value="ejercicios"]');
   await page.click('[data-action="detail"][data-value="sitio"]');
@@ -96,6 +104,11 @@ for (const [label, options] of [["Móvil (iPhone 13)", devices["iPhone 13"]], ["
   await page.click('[data-action="detail"][data-value="sitio"]');
   await page.click('.sheet-cta [data-action="start"]');
   check("El cronómetro aparece en ejercicios con tiempo", await page.isVisible("#chrono"));
+  await page.click('[data-action="both"]');
+  await page.waitForTimeout(300);
+  check("«Los dos» inicia sesión y cronómetro a la vez", (await page.textContent('[data-action="timer"]')) === "Pausar" && (await page.textContent('[data-action="chrono"]')) === "Parar");
+  await page.click('[data-action="chrono"]');
+  await page.click('[data-action="timer"]');
   await page.click('[data-action="chrono"]');
   await page.waitForTimeout(400);
   await page.click('[data-action="chrono"]');

@@ -331,46 +331,41 @@
 
   /* ---------- Hoy ---------- */
   function renderToday() {
-    return `${renderRoutine()}
-      <section class="section">
+    return `<section class="section">
         <button class="cta" data-action="train"><b>Entrenar hoy</b><small>${todayQueue().length} ejercicios guiados · ${esc(goalName())}</small></button>
         ${renderGoals()}
       </section>
       ${renderPlan()}
+      ${renderRoutine()}
       <section class="section">${renderCode()}</section>`;
   }
 
+
+  /** Rutina diaria en una franja compacta: un contador pequeño por pauta. */
   function renderRoutine() {
     const day = state.daily[dayKey(today())] || {};
-    const colors = ["#0D7A5C", "#6B4A00", "#4A3BD6", "#A8285F"];
-    const rows = DATA.routine.map((r, i) => {
+    const items = DATA.routine.map((r) => {
       const n = day[r.id] || 0;
+      const done = n >= r.min;
       const control = r.check
-        ? `<button class="btn btn-soft" data-action="routine-toggle" data-value="${r.id}" aria-pressed="${n ? "true" : "false"}">${n ? "Hecho" : "Marcar"}</button>`
-        : `<div class="counter">
-            <button class="step-btn" data-action="routine-step" data-value="${r.id}" data-step="-1" aria-label="Quitar uno: ${esc(r.name)}">–</button>
-            <b aria-live="polite">${n}</b><span>/${esc(r.label)}</span>
-            <button class="step-btn" data-action="routine-step" data-value="${r.id}" data-step="1" aria-label="Añadir uno: ${esc(r.name)}">+</button>
-          </div>`;
-      return `<div class="routine-row${n >= r.min ? " is-done" : ""}" style="--ci:${colors[i % colors.length]};--t:#F1F0F6">
-        <div><b>${esc(r.name)}</b><small>${esc(r.hint)}</small></div>${control}</div>`;
+        ? `<button class="mini-btn" data-action="routine-toggle" data-value="${r.id}" aria-pressed="${n ? "true" : "false"}" aria-label="${esc(r.name)}: ${n ? "hecho" : "marcar"}">${n ? "✓" : "○"}</button>`
+        : `<button class="mini-btn" data-action="routine-step" data-value="${r.id}" data-step="-1" aria-label="Quitar uno: ${esc(r.name)}">–</button>
+           <b aria-live="polite">${n}<span>/${esc(r.label)}</span></b>
+           <button class="mini-btn" data-action="routine-step" data-value="${r.id}" data-step="1" aria-label="Añadir uno: ${esc(r.name)}">+</button>`;
+      return `<div class="routine-item${done ? " is-done" : ""}" title="${esc(r.hint)}"><span>${esc(r.name)}</span><div>${control}</div></div>`;
     }).join("");
-    return `<section class="section"><h2>Rutina de hoy</h2>
-      <div class="card card-pad routine"><p class="lead" style="margin:0 0 4px">Pautas de tu educadora para cada día.</p>${rows}</div></section>`;
+    return `<section class="section"><h2>Rutina de hoy</h2><div class="routine-strip">${items}</div></section>`;
   }
+
 
   function renderGoals() {
     const options = [["toca", { name: "Lo que toca", accent: "#1E1B3A", ink: "#1E1B3A", tint: "#ECEBF3", icon: "arrow" }]]
       .concat(Object.entries(TYPES));
-    return `<div class="goals" role="group" aria-label="Qué quieres practicar">${options.map(([key, t]) => {
-      const list = key === "toca" ? programExercises() : EXERCISES.filter((e) => e.type === key);
-      const pct = Math.round(list.reduce((sum, e) => sum + mastery(e.id), 0) / list.length);
-      const sub = key === "toca" ? "Lo pendiente para subir de nivel" : `${list.length} ejercicios`;
-      return `<button class="goal" style="--c:${t.accent};--ci:${t.ink};--t:${t.tint}" data-action="goal" data-value="${key}" aria-pressed="${state.goal === key}">
-        <span class="check" aria-hidden="true">✓</span><div class="tile">${icon(t.icon)}</div>
-        <b>${esc(t.name)}</b><small>${sub}</small>${bar(pct)}</button>`;
-    }).join("")}</div>`;
+    return `<div class="goal-chips" role="group" aria-label="Qué quieres practicar">${options.map(([key, t]) =>
+      `<button class="goal-chip" style="--c:${t.accent};--ci:${t.ink};--t:${t.tint}" data-action="goal" data-value="${key}" aria-pressed="${state.goal === key}">${icon(t.icon)}${esc(t.name)}</button>`
+    ).join("")}</div>`;
   }
+
 
   function renderPlan() {
     const list = plan();
@@ -396,22 +391,27 @@
     return `<ol class="level-track${size === "big" ? " is-big" : ""}" aria-label="${label}">${steps}</ol>`;
   }
 
+  /** Fila del plan: tocarla empieza el ejercicio; el botón «i» abre la ficha. */
   function renderPlanRow(e, index) {
     const level = currentLevel(e);
     const line = isFinished(e) ? "Los 3 niveles superados"
       : isWaiting(e) ? `Nivel ${levelsDone(e.id)} superado · el siguiente se abre cuando todos lo superen`
       : `<b>Nivel ${level}:</b> ${txt(e.levels[level - 1].goal)}`;
-    const sessions = isFinished(e) || isWaiting(e) ? "" : ` · ${passedCount(e.id, level)} de ${SESSIONS_TO_PASS} sesiones`;
+    const sessions = isFinished(e) || isWaiting(e) ? "" : `${passedCount(e.id, level)} de ${SESSIONS_TO_PASS} sesiones`;
     return `<article class="ex-row" style="${typeVars(e.type)}">
-      <div class="tile"><span class="num" aria-hidden="true">${index + 1}</span>${typeIcon(e)}</div>
-      <button class="body" data-action="detail" data-value="${e.id}">
-        <div class="name-line"><b>${txt(e.name)}</b>${dots(e.difficulty)}</div>
-        <div class="meta">${levelTrack(e)}<span>${sessions.replace(" · ", "")}</span>${e.missingInfo ? '<span class="badge badge-warn">Falta info</span>' : ""}</div>
-        <div class="goal-line">${line}</div>
+      <button class="row-main" data-action="start" data-value="${e.id}" aria-label="Empezar ${txt(e.name)}">
+        <div class="tile"><span class="num" aria-hidden="true">${index + 1}</span>${typeIcon(e)}</div>
+        <div class="body">
+          <div class="name-line"><b>${txt(e.name)}</b>${dots(e.difficulty)}</div>
+          <div class="meta">${levelTrack(e)}<span>${sessions}</span>${e.missingInfo ? '<span class="badge badge-warn">Falta info</span>' : ""}</div>
+          <div class="goal-line">${line}</div>
+        </div>
+        <span class="play" aria-hidden="true">▶</span>
       </button>
-      <button class="btn" data-action="start" data-value="${e.id}">Empezar</button>
+      <button class="info-btn" data-action="detail" data-value="${e.id}" aria-label="Ver ficha de ${txt(e.name)}">i</button>
     </article>`;
   }
+
 
 
   function renderCode() {
@@ -768,9 +768,11 @@
         </div>
         <button class="undo-btn" data-action="undo"${guide.log.length ? "" : " disabled"}>↶ Deshacer el último</button>
       </section>
-      ${time ? `<div class="chrono" id="chrono"></div>` : ""}
-      ${e.pyramid ? `<h3 class="h3">Repeticiones · toca la que estás haciendo</h3><div id="pyramid">${renderPyramid(e, guide.rep, guide.log)}</div>` : ""}
-      <div class="timer-row" id="timer"></div>`;
+      <section class="clock-card" aria-label="Tiempo">
+        ${time ? '<div class="chrono" id="chrono"></div>' : ""}
+        <div class="timer-row" id="timer"></div>
+      </section>
+      ${e.pyramid ? `<h3 class="h3">Repeticiones · toca la que estás haciendo</h3><div id="pyramid">${renderPyramid(e, guide.rep, guide.log)}</div>` : ""}`;
   }
 
 
@@ -819,9 +821,13 @@
     const el = $("#timer");
     if (!el || !guide) return;
     const t = guide.timer;
-    el.innerHTML = `<span>Tiempo de sesión</span><b>${clock(t.left)}</b>${bar(Math.round((t.left / t.total) * 100))}
-      <button class="btn btn-soft" data-action="timer">${t.running ? "Pausar" : t.left < t.total ? "Seguir" : "Iniciar"}</button>`;
+    const c = guide.chrono;
+    const both = levelTime() && !(t.running && c.running)
+      ? `<button class="both-btn" data-action="both" title="Inicia la sesión y el cronómetro a la vez">▶ Los dos</button>` : "";
+    el.innerHTML = `<span>Sesión</span><b>${clock(t.left)}</b>${bar(Math.round((t.left / t.total) * 100))}
+      <button class="btn btn-soft" data-action="timer">${t.running ? "Pausar" : t.left < t.total ? "Seguir" : "Iniciar"}</button>${both}`;
   }
+
 
   function toggleTimer() {
     const t = guide.timer;
@@ -870,7 +876,7 @@
   }
   function toggleChrono() {
     const c = guide.chrono;
-    if (c.running) { stopChrono(); return; }
+    if (c.running) { stopChrono(); paintTimer(); return; }
     const time = levelTime();
     c.running = true;
     c.current = 0;
@@ -882,6 +888,7 @@
       paintChrono();
     }, 100);
     paintChrono();
+    paintTimer();
   }
 
   function mark(hit) {
@@ -1114,6 +1121,10 @@
     undo: () => undoMark(),
     pyramid: (v) => { guide.rep = +v; $("#pyramid").innerHTML = renderPyramid(BY_ID[guide.id], guide.rep, guide.log); },
     timer: () => toggleTimer(),
+    both: () => {
+      if (!guide.timer.running) toggleTimer();
+      if (levelTime() && !guide.chrono.running) toggleChrono();
+    },
     chrono: () => toggleChrono(),
     rate: (v) => { keepNote(); guide.rating = +v; renderGuide(); },
     met: () => { keepNote(); guide.metManual = !isMet(); renderGuide(); },
