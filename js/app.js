@@ -23,10 +23,6 @@
     2: { label: "Bien", ink: "#3E30C4", tint: "#ECE9FF", mouth: "M8.5 15h7" },
     3: { label: "¡Lo bordó!", ink: "#13906D", tint: "#DDF6EE", mouth: "M8 14c1.2 1.6 2.5 2.4 4 2.4s2.8-.8 4-2.4" },
   };
-  const CODE_COLORS = [
-    ["#ECE9FF", "#3E30C4"], ["#FFE3EF", "#A8285F"], ["#DDF6EE", "#0D7A5C"], ["#FFF1CC", "#6B4A00"],
-    ["#DFF0FF", "#1C6DB0"], ["#FFE6E1", "#B23A27"], ["#F1E8FF", "#6A3DC0"], ["#E9EDF3", "#4B586B"],
-  ];
   const VIEWS = ["hoy", "ejercicios", "progreso"];
 
   /* =========================================================
@@ -330,14 +326,25 @@
 
   /* ---------- Hoy ---------- */
   function renderToday() {
+    const next = todayQueue().map((id) => BY_ID[id]);
+    const preview = next.length
+      ? `<ol class="cta-list">${next.map((e) => `<li>${txt(e.name)}</li>`).join("")}</ol>`
+      : "<p>No queda nada pendiente en este grupo.</p>";
     return `<section class="section">
-        <button class="cta" data-action="train"><b>Entrenar hoy</b><small>${todayQueue().length} ejercicios guiados · ${esc(goalName())}</small></button>
-        ${renderGoals()}
+        <div class="cta-card">
+          <div><span class="eyebrow">Hoy toca · ${esc(goalName())}</span>${preview}</div>
+          <button class="btn btn-primary" data-action="train"${next.length ? "" : " disabled"}>▶ Entrenar ${next.length} ejercicios</button>
+        </div>
       </section>
-      ${renderPlan()}
+      <section class="section">
+        <h2 class="section-title">Elige qué practicar</h2>
+        ${renderGoals()}
+        ${renderPlan()}
+      </section>
       ${renderRoutine()}
       <section class="section">${renderCode()}</section>`;
   }
+
 
 
   /** Rutina diaria en una franja compacta: un contador pequeño por pauta. */
@@ -353,29 +360,26 @@
            <button class="mini-btn" data-action="routine-step" data-value="${r.id}" data-step="1" aria-label="Añadir uno: ${esc(r.name)}">+</button>`;
       return `<div class="routine-item${done ? " is-done" : ""}" title="${esc(r.hint)}"><span>${esc(r.name)}</span><div>${control}</div></div>`;
     }).join("");
-    return `<section class="section"><h2>Rutina de hoy</h2><div class="routine-strip">${items}</div></section>`;
+    return `<section class="section"><h2 class="section-title">Rutina de hoy</h2><div class="routine-strip">${items}</div></section>`;
   }
 
 
   function renderGoals() {
     const options = [["toca", { name: "Lo que toca", accent: "#1E1B3A", ink: "#1E1B3A", tint: "#ECEBF3", icon: "arrow" }]]
       .concat(Object.entries(TYPES));
-    return `<div class="goal-chips" role="group" aria-label="Qué quieres practicar">${options.map(([key, t]) =>
-      `<button class="goal-chip" style="--c:${t.accent};--ci:${t.ink};--t:${t.tint}" data-action="goal" data-value="${key}" aria-pressed="${state.goal === key}">${icon(t.icon)}${esc(t.name)}</button>`
+    return `<div class="chip-row" role="group" aria-label="Qué quieres practicar">${options.map(([key, t]) =>
+      `<button class="chip" style="--c:${t.accent}" data-action="goal" data-value="${key}" aria-pressed="${state.goal === key}">${icon(t.icon)}${esc(t.name)}</button>`
     ).join("")}</div>`;
   }
 
 
   function renderPlan() {
     const list = plan();
-    const lead = state.goal === "toca"
-      ? `Ejercicios que aún no han superado el nivel ${globalLevel()}. Entrena ${state.weekly} días por semana.`
-      : "Sesiones cortas, con descanso y juego entre ejercicios.";
-    const rows = list.length ? list.map((e, i) => renderPlanRow(e, i)).join("")
-      : `<div class="card empty"><b>¡Todo al día!</b>No queda nada pendiente aquí. Elige otro tipo de ejercicio.</div>`;
-    return `<section class="section" id="plan"><h2>Plan de hoy · ${esc(goalName())}</h2><p class="lead">${lead}</p>
-      <div class="plan">${rows}</div></section>`;
+    const rows = list.length ? list.map((e) => exerciseRow(e, "start")).join("")
+      : '<div class="empty"><b>¡Todo al día!</b>No queda nada pendiente aquí. Elige otro grupo.</div>';
+    return `<div class="list" id="plan" aria-label="Ejercicios de ${esc(goalName())}">${rows}</div>`;
   }
+
 
   /** Los 3 niveles de un ejercicio: hechos ✓, el actual destacado y los bloqueados con candado. */
   function levelTrack(e, size) {
@@ -391,32 +395,40 @@
   }
 
   /** Fila del plan: tocarla empieza el ejercicio; el botón «i» abre la ficha. */
-  function renderPlanRow(e, index) {
+  /** Fila de ejercicio. En «Hoy» tocarla lo empieza; en la biblioteca abre la ficha. */
+  function exerciseRow(e, primary) {
     const times = sessionsOf(e.id).length;
     const practiced = times ? `Practicado ${times} ${times === 1 ? "vez" : "veces"}` : "Sin practicar";
-    return `<article class="ex-row" style="${typeVars(e.type)}">
-      <button class="row-main" data-action="start" data-value="${e.id}" aria-label="Empezar ${txt(e.name)}">
-        <div class="tile"><span class="num" aria-hidden="true">${index + 1}</span>${typeIcon(e)}</div>
-        <div class="body">
+    const level = isFinished(e) ? "Completado" : isWaiting(e) ? "Espera al resto" : `Nivel ${currentLevel(e)}`;
+    const main = primary === "start"
+      ? `data-action="start" data-value="${e.id}" aria-label="Empezar ${txt(e.name)}"`
+      : `data-action="detail" data-value="${e.id}"`;
+    const side = primary === "start"
+      ? `<button class="icon-btn" data-action="detail" data-value="${e.id}" aria-label="Ver ficha de ${txt(e.name)}">i</button>`
+      : `<button class="icon-btn is-play" data-action="start" data-value="${e.id}" aria-label="Empezar ${txt(e.name)}">▶</button>`;
+    return `<article class="row" style="${typeVars(e.type)}">
+      <button class="row-main" ${main}>
+        <span class="tile">${typeIcon(e)}</span>
+        <span class="row-text">
           <b>${txt(e.name)}</b>
-          <div class="goal-line">${txt(e.summary)}</div>
-          <div class="meta">${levelTrack(e)}<span>${practiced}</span>${e.missingInfo ? '<span class="badge badge-warn">Falta info</span>' : ""}</div>
-        </div>
-        <span class="play" aria-hidden="true">▶</span>
-      </button>
-      <button class="info-btn" data-action="detail" data-value="${e.id}" aria-label="Ver ficha de ${txt(e.name)}">i</button>
+          <span class="row-summary">${txt(e.summary)}</span>
+          <span class="row-meta">${levelTrack(e)}<span>${level} · ${practiced}</span>${e.program ? "" : '<span class="tag">Extra</span>'}${e.missingInfo ? '<span class="tag tag-warn">Falta info</span>' : ""}</span>
+        </span>
+        ${primary === "start" ? '<span class="play" aria-hidden="true">▶</span>' : ""}
+      </button>${side}
     </article>`;
   }
 
 
 
 
+
   function renderCode() {
-    return `<div class="card card-pad"><h2 class="card-title">Código de comunicación</h2>${DATA.code.map((c, i) => {
-      const [bg, fg] = CODE_COLORS[i % CODE_COLORS.length];
-      return `<div class="code-row"><b style="background:${bg};color:${fg}">${txt(c.word)}</b><span>${esc(c.meaning)}</span></div>`;
-    }).join("")}</div>`;
+    return `<details class="disclosure"><summary>Código de comunicación</summary><div class="disclosure-body">${DATA.code.map((c) =>
+      `<div class="code-row"><b>${txt(c.word)}</b><span>${esc(c.meaning)}</span></div>`
+    ).join("")}</div></details>`;
   }
+
 
   /* ---------- Ejercicios ---------- */
   function renderLibrary() {
@@ -427,28 +439,21 @@
       .map(([k, t]) => {
         const list = EXERCISES.filter((e) => e.type === k).sort((a, b) => a.difficulty - b.difficulty);
         return `<section class="group" aria-label="${esc(t.name)}">
-          <h3 class="group-title" style="${typeVars(k)}"><span class="tile">${icon(t.icon)}</span>${esc(t.name)}<small>${list.length}</small></h3>
-          <div class="cards">${list.map(renderCard).join("")}</div></section>`;
+          <h3 class="group-title">${esc(t.name)}<small>${list.length}</small></h3>
+          <div class="list">${list.map((e) => exerciseRow(e, "detail")).join("")}</div></section>`;
       }).join("");
-    return `<section class="section"><h2>Biblioteca de ejercicios</h2>
-      <p class="lead">${EXERCISES.length} ejercicios clasificados por tipo, paso a paso.</p>
-      <div class="filters" role="group" aria-label="Filtrar por tipo">${chips}</div>${groups}</section>`;
+    return `<section class="section"><h2 class="section-title">Ejercicios</h2>
+      <div class="chip-row" role="group" aria-label="Filtrar por tipo">${chips}</div>${groups}</section>`;
   }
 
-  function renderCard(e) {
-    return `<button class="ex-card" style="${typeVars(e.type)}" data-action="detail" data-value="${e.id}">
-      ${e.program ? "" : '<span class="extra">Extra · no cuenta para el nivel</span>'}
-      <b>${txt(e.name)}</b>
-      <p class="summary">${txt(e.summary)}</p>
-      <div class="meta">${levelTrack(e)}<span>${isFinished(e) ? "Completado" : isWaiting(e) ? "Espera al resto" : `Nivel ${currentLevel(e)}`}</span></div>
-    </button>`;
-  }
+
+
 
 
   /* ---------- Progreso ---------- */
   function renderProgress() {
     return `${renderTrack()}
-      <section class="section"><h2>Progreso de ${esc(state.dog)}</h2>
+      <section class="section"><h2 class="section-title">Progreso de ${esc(state.dog)}</h2>
         <p class="lead">Cada nivel se supera con ${SESSIONS_TO_PASS} sesiones que cumplan su objetivo.</p>
         ${renderTiles()}
         <div class="grid-2" style="margin-bottom:18px">${renderHeatmap()}${renderTypeBars()}</div>

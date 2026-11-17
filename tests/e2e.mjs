@@ -69,8 +69,8 @@ for (const [label, options] of [["Móvil (iPhone 13)", devices["iPhone 13"]], ["
   await page.waitForSelector(".hero");
   check("La app arranca y muestra a Maya", (await page.textContent(".dog-name")) === "Maya");
   check("La cabecera solo muestra el nombre", !(await page.$(".level-pill")) && !(await page.$(".stat")));
-  check("Cada ejercicio del plan muestra su nivel", (await page.$$("#plan .level-track")).length > 0 && (await page.textContent("#plan .goal-line")).length > 10);
-  check("El plan dice cuántas veces se ha practicado", (await page.textContent("#plan .meta")).includes("Sin practicar"));
+  check("Cada ejercicio del plan muestra su nivel", (await page.$$("#plan .level-track")).length > 0 && (await page.textContent("#plan .row-summary")).length > 10);
+  check("El plan dice cuántas veces se ha practicado", (await page.textContent("#plan .row-meta")).includes("Sin practicar"));
 
   // Rutina diaria
   await page.click('[data-action="routine-step"][data-value="olfato"][data-step="1"]');
@@ -82,13 +82,13 @@ for (const [label, options] of [["Móvil (iPhone 13)", devices["iPhone 13"]], ["
 
   // Elegir tipo y bajar al plan
   await page.click('[data-action="goal"][data-value="trucos"]');
-  check("Elegir un tipo cambia el plan", (await page.textContent("#plan h2")).includes("Trucos"));
+  check("Elegir un tipo cambia el plan", (await page.textContent(".cta-card .eyebrow")).includes("Trucos"));
 
   // Tocar la fila del plan empieza el ejercicio; «i» abre la ficha
   await page.click("#plan .row-main");
   check("Tocar una fila del plan abre el modo guiado", await page.isVisible(".guide"));
   await page.keyboard.press("Escape");
-  await page.click("#plan .info-btn");
+  await page.click("#plan .icon-btn");
   check("El botón «i» abre la ficha", await page.isVisible(".sheet"));
   await page.keyboard.press("Escape");
 
@@ -206,7 +206,7 @@ for (const [label, options] of [["Móvil (iPhone 13)", devices["iPhone 13"]], ["
   saved = await stored(page);
   check("La copia dañada se limpia al restaurar", saved.sessions.length === 1 && saved.goal === "toca");
   await page.click('[data-action="view"][data-value="hoy"]');
-  check("La app sigue funcionando tras restaurar", await page.isVisible(".cta"));
+  check("La app sigue funcionando tras restaurar", await page.isVisible(".cta-card"));
 
   // Persistencia al recargar
   await page.reload();
